@@ -91,7 +91,7 @@
                     <option value="State Govt Jobs">🏛️ State Govt Jobs</option>
                     <option value="Banking Jobs">🏦 Banking Jobs</option>
                     <option value="Railway Jobs">🚆 Railway Jobs</option>
-                    <option value="Defense & UPSC Jobs">🛡️️ Defense & UPSC Jobs</option>
+                    <option value="Defense & UPSC Jobs">🛡️ Defense & UPSC Jobs</option>
                     <option value="Teaching Jobs">🎓 Teaching Jobs</option>
                     <option value="Engineering Jobs">⚙️ Engineering Jobs</option>
                     <option value="IT & Private Jobs">💻 IT & Private Jobs</option>
@@ -149,7 +149,7 @@
         </aside>
     </main>
 
-    <!-- ADMIN LOGIN MODAL -->
+    <!-- CONFIDENTIAL ADMIN LOGIN MODAL -->
     <div id="adminModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative">
             <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
@@ -159,22 +159,21 @@
                 <div class="w-12 h-12 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center mx-auto text-xl mb-2">
                     <i class="fa-solid fa-user-shield"></i>
                 </div>
-                <h3 class="text-xl font-bold text-slate-800">Admin Authentication</h3>
-                <p class="text-xs text-slate-500">Sign in to publish posts and manage logo/links</p>
+                <h3 class="text-xl font-bold text-slate-800">Admin Portal Authentication</h3>
+                <p class="text-xs text-slate-500">Sign in to manage listings, branding & social links</p>
             </div>
             
             <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Username</label>
-                    <input type="text" id="adminUser" placeholder="Enter Username (Admin)" required class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                    <input type="text" id="adminUser" placeholder="Enter Username" required class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
                     <input type="password" id="adminPass" placeholder="Enter Password" required class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
                 </div>
-                <button type="button" onclick="autoFillCreds()" class="text-xs text-blue-600 hover:underline font-semibold block">⚡ Auto-Fill Credentials (Admin / Basam@2212)</button>
                 <div id="loginErrorMsg" class="text-xs text-red-600 hidden font-bold">Invalid Admin credentials!</div>
-                <button type="submit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-2.5 rounded text-sm transition">Authenticate & Open Console</button>
+                <button type="submit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-2.5 rounded text-sm transition">Authenticate & Login</button>
             </form>
         </div>
     </div>
@@ -323,7 +322,7 @@
                             <option value="Railway Jobs">🚆 Railway Jobs</option>
                             <option value="Defense & UPSC Jobs">🛡️ Defense & UPSC Jobs</option>
                             <option value="Teaching Jobs">🎓 Teaching Jobs</option>
-                            <option value="Engineering Jobs">⚙️ Engineering Jobs</option>
+                            <option value="Engineering Jobs">⚙️️ Engineering Jobs</option>
                             <option value="IT & Private Jobs">💻 IT & Private Jobs</option>
                         </select>
                     </div>
@@ -368,7 +367,7 @@
         </div>
     </div>
 
-    <!-- DETAILED VIEW MODAL (IMAGE LAYOUT MATCH) -->
+    <!-- DETAILED VIEW MODAL -->
     <div id="detailViewModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-lg shadow-2xl max-w-4xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeDetailModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
@@ -380,11 +379,8 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // API Endpoint configuration
-        const API_BASE_URL = '/api'; // Express backend URL
-
         // SHA-256 Hashing helper
         async function sha256(str) {
             const buffer = new TextEncoder().encode(str);
@@ -413,16 +409,8 @@
             }
         ];
 
-        // LOAD DATA FROM BACKEND / LOCAL STORAGE
-        async function fetchPostsData() {
-            try {
-                const res = await fetch(`${API_BASE_URL}/posts`);
-                if (res.ok) {
-                    return await res.json();
-                }
-            } catch (e) {
-                console.log("Using browser storage sync");
-            }
+        // LOAD / SAVE STORAGE
+        function fetchPostsData() {
             const stored = localStorage.getItem('hamsika_posts');
             if (!stored) {
                 localStorage.setItem('hamsika_posts', JSON.stringify(defaultPosts));
@@ -431,15 +419,8 @@
             return JSON.parse(stored);
         }
 
-        async function savePostsData(posts) {
+        function savePostsData(posts) {
             localStorage.setItem('hamsika_posts', JSON.stringify(posts));
-            try {
-                await fetch(`${API_BASE_URL}/posts/sync`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(posts)
-                });
-            } catch(e) {}
             renderPosts();
             renderAdminTable();
         }
@@ -459,8 +440,8 @@
         }
 
         // RENDER POSTS TO HOMEPAGE
-        async function renderPosts() {
-            const posts = await fetchPostsData();
+        function renderPosts() {
+            const posts = fetchPostsData();
             const search = document.getElementById('searchInput').value.toLowerCase();
             const cat = document.getElementById('categoryFilter').value;
 
@@ -515,8 +496,8 @@
         }
 
         // DETAILED FREEJOBALERT VIEW
-        async function openDetailView(id) {
-            const posts = await fetchPostsData();
+        function openDetailView(id) {
+            const posts = fetchPostsData();
             const post = posts.find(p => p.id === id);
             if (!post) return;
 
@@ -558,11 +539,13 @@
             document.getElementById('detailViewModal').classList.add('hidden');
         }
 
-        // AUTHENTICATION LOGIC
+        // CONFIDENTIAL AUTHENTICATION LOGIC
         function openAdminModal() {
             if (isAdminLoggedIn) {
                 openAdminConsole();
             } else {
+                document.getElementById('adminLoginForm').reset();
+                document.getElementById('loginErrorMsg').classList.add('hidden');
                 document.getElementById('adminModal').classList.remove('hidden');
             }
         }
@@ -571,18 +554,13 @@
             document.getElementById('adminModal').classList.add('hidden');
         }
 
-        function autoFillCreds() {
-            document.getElementById('adminUser').value = 'Admin';
-            document.getElementById('adminPass').value = 'Basam@2212';
-        }
-
         async function handleAdminLogin(e) {
             e.preventDefault();
             const u = document.getElementById('adminUser').value.trim();
             const p = document.getElementById('adminPass').value.trim();
             const pHash = await sha256(p);
 
-            // Validates "Admin" case-insensitive and hashed password
+            // Verified against hash: 2c42d3cbb42137ea360156828bafe0b66b3f71c48011c1dcf1f4df4c3e85e252
             if (u.toLowerCase() === 'admin' && pHash === '2c42d3cbb42137ea360156828bafe0b66b3f71c48011c1dcf1f4df4c3e85e252') {
                 isAdminLoggedIn = true;
                 closeAdminModal();
@@ -595,7 +573,6 @@
         function logoutAdmin() {
             isAdminLoggedIn = false;
             closeAdminConsole();
-            alert("Admin logged out successfully.");
         }
 
         function openAdminConsole() {
@@ -608,8 +585,8 @@
         }
 
         // RENDER ADMIN POSTS TABLE
-        async function renderAdminTable() {
-            const posts = await fetchPostsData();
+        function renderAdminTable() {
+            const posts = fetchPostsData();
             const tbody = document.getElementById('adminPostsTableBody');
             tbody.innerHTML = '';
 
@@ -643,8 +620,8 @@
             document.getElementById('jobFormModal').classList.add('hidden');
         }
 
-        async function editJobPost(id) {
-            const posts = await fetchPostsData();
+        function editJobPost(id) {
+            const posts = fetchPostsData();
             const p = posts.find(item => item.id === id);
             if (!p) return;
 
@@ -665,9 +642,9 @@
             document.getElementById('jobFormModal').classList.remove('hidden');
         }
 
-        async function handleSaveJobPost(e) {
+        function handleSaveJobPost(e) {
             e.preventDefault();
-            const posts = await fetchPostsData();
+            const posts = fetchPostsData();
             const editId = document.getElementById('editJobId').value;
 
             const postObj = {
@@ -692,16 +669,15 @@
                 posts.unshift(postObj);
             }
 
-            await savePostsData(posts);
+            savePostsData(posts);
             closeJobFormModal();
-            alert("Job post published & synchronized!");
         }
 
-        async function deleteJobPost(id) {
+        function deleteJobPost(id) {
             if (!confirm("Are you sure you want to delete this job posting?")) return;
-            let posts = await fetchPostsData();
+            let posts = fetchPostsData();
             posts = posts.filter(p => p.id !== id);
-            await savePostsData(posts);
+            savePostsData(posts);
         }
 
         // CONSOLE TABS
@@ -757,7 +733,7 @@
                 document.getElementById('brandLogoIcon').className = `fa-solid ${l.icon} text-cyan-300`;
             }
 
-            // Load saved social
+            // Load saved social links
             const savedSocial = localStorage.getItem('hamsika_social');
             if (savedSocial) {
                 const s = JSON.parse(savedSocial);
