@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hamsika Infinity - Job Alert Portal & Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="h-full text-slate-800 flex flex-col min-h-screen">
+
+  <!-- HEADER -->
+  <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-lg border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- BRANDING / LOGO -->
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="showMainPortal()">
+          <div id="headerLogoContainer" class="flex items-center space-x-2">
+            <!-- Dynamic Logo Injected Here -->
+          </div>
+        </div>
+
+        <!-- TOP RIGHT ACTION BUTTONS -->
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          <!-- WhatsApp Quick Join -->
+          <a id="headerWaBtn" href="#" target="_blank" class="hidden sm:flex items-center space-x-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-2 rounded-lg transition shadow-sm">
+            <i class="fa-brands fa-whatsapp text-sm"></i>
+            <span>WhatsApp Group</span>
+          </a>
+
+          <!-- Telegram Quick Join -->
+          <a id="headerTgBtn" href="#" target="_blank" class="hidden md:flex items-center space-x-1.5 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold px-3 py-2 rounded-lg transition shadow-sm">
+            <i class="fa-brands fa-telegram text-sm"></i>
+            <span>Telegram Channel</span>
+          </a>
+
+          <!-- ADMIN BUTTON WITH LOCK STATUS -->
+          <button id="adminPortalBtn" onclick="handleAdminBtnClick()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-lg transition shadow-sm flex items-center space-x-2">
+            <i id="adminBtnIcon" class="fa-solid fa-lock"></i>
+            <span id="adminBtnText">Admin Login</span>
+          </button>
+
+          <!-- POST JOB BUTTON -->
+          <button onclick="handlePostJobClick()" class="bg-amber-600 hover:bg-amber-500 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-lg transition shadow-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-plus-circle"></i>
+            <span class="hidden sm:inline">Post Job</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CATEGORY FILTER TABS -->
+  <nav class="bg-slate-800 text-slate-200 border-b border-slate-700 shadow-inner">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto custom-scrollbar">
+      <div class="flex space-x-1 py-2 text-xs sm:text-sm font-medium whitespace-nowrap" id="tabContainer">
+        <button onclick="filterTab('All')" class="tab-btn px-4 py-1.5 rounded-md transition bg-indigo-600 text-white font-semibold">
+          <i class="fa-solid fa-list mr-1.5"></i>All Updates
+        </button>
+        <button onclick="filterTab('Latest Jobs')" class="tab-btn px-4 py-1.5 rounded-md hover:bg-slate-700 text-slate-300 transition">
+          <i class="fa-solid fa-briefcase mr-1.5"></i>Latest Jobs
+        </button>
+        <button onclick="filterTab('Central Govt Jobs')" class="tab-btn px-4 py-1.5 rounded-md hover:bg-slate-700 text-slate-300 transition">
+          <i class="fa-solid fa-landmark mr-1.5"></i>Central Govt Jobs
+        </button>
+        <button onclick="filterTab('Admit Card')" class="tab-btn px-4 py-1.5 rounded-md hover:bg-slate-700 text-slate-300 transition">
+          <i class="fa-solid fa-id-card mr-1.5"></i>Admit Card
+        </button>
+        <button onclick="filterTab('Answer Key')" class="tab-btn px-4 py-1.5 rounded-md hover:bg-slate-700 text-slate-300 transition">
+          <i class="fa-solid fa-key mr-1.5"></i>Answer Key
+        </button>
+        <button onclick="filterTab('Results')" class="tab-btn px-4 py-1.5 rounded-md hover:bg-slate-700 text-slate-300 transition">
+          <i class="fa-solid fa-square-poll-vertical mr-1.5"></i>Results
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- PORTAL PUBLIC VIEW -->
+    <div id="mainPortalView" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- LEFT / MAIN CONTENT AREA -->
+      <div class="lg:col-span-8 space-y-6">
+
+        <!-- SEARCH BAR & FILTER -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-3 items-center">
+          <div class="relative w-full">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
+            <input type="text" id="searchInput" oninput="renderJobs()" placeholder="Search jobs, UPSC, Admit Cards, or keywords..." class="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div class="w-full sm:w-64">
+            <select id="categoryDropdownFilter" onchange="renderJobs()" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
+              <option value="">All Categories</option>
+              <option value="Central Govt Jobs">🏛️ Central Govt Jobs</option>
+              <option value="State Govt Jobs">🏢 State Govt Jobs</option>
+              <option value="UPSC & Defense">⚔️ UPSC & Defense</option>
+              <option value="Banking Jobs">🏦 Banking Jobs</option>
+              <option value="Railway Jobs">🚆 Railway Jobs</option>
+              <option value="IT & Software">💻 IT & Private Jobs</option>
+              <option value="Teaching Jobs">🎓 Teaching Jobs</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- SOCIAL BANNER INSIDE FEED -->
+        <div class="bg-gradient-to-r from-emerald-800 to-teal-900 rounded-xl p-4 text-white shadow flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center space-x-3">
+            <div class="bg-white/10 p-3 rounded-full text-emerald-300 text-2xl">
+              <i class="fa-solid fa-bell-concierge"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-sm sm:text-base">Get Free Job Alerts Instantly</h4>
+              <p class="text-xs text-emerald-100">Join our official WhatsApp group & Telegram channel for daily government notification updates.</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 shrink-0">
+            <a id="feedWaBtn" href="#" target="_blank" class="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-bold rounded-lg transition flex items-center space-x-1">
+              <i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span>
+            </a>
+            <a id="feedTgBtn" href="#" target="_blank" class="px-3 py-1.5 bg-sky-500 hover:bg-sky-400 text-white text-xs font-bold rounded-lg transition flex items-center space-x-1">
+              <i class="fa-brands fa-telegram"></i><span>Telegram</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- JOB CARDS LISTING CONTAINER -->
+        <div id="jobListingsContainer" class="space-y-4">
+          <!-- Dynamic Job Cards Injected Here -->
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div id="emptyState" class="hidden text-center py-12 bg-white rounded-xl border border-dashed border-slate-300 p-6">
+          <i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-2"></i>
+          <p class="font-semibold text-slate-700">No job postings found matching your query.</p>
+          <button onclick="resetFilters()" class="mt-3 text-xs bg-indigo-50 text-indigo-600 font-bold px-3 py-1.5 rounded-lg hover:bg-indigo-100 transition">Clear Search Filters</button>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDEBAR -->
+      <div class="lg:col-span-4 space-y-6">
+        
+        <!-- QUICK JOIN BOX -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <h3 class="font-bold text-slate-900 border-b border-slate-100 pb-2 text-sm uppercase tracking-wider flex items-center justify-between">
+            <span>Join Social Networks</span>
+            <i class="fa-solid fa-users text-indigo-500"></i>
+          </h3>
+          <p class="text-xs text-slate-500">Get official recruitment notifications, admit cards, and test answer keys directly on your phone.</p>
+          
+          <div class="space-y-2.5">
+            <a id="sidebarWaBtn" href="#" target="_blank" class="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg text-xs flex items-center justify-between transition shadow-sm">
+              <span class="flex items-center space-x-2">
+                <i class="fa-brands fa-whatsapp text-base"></i>
+                <span>Join WhatsApp Group</span>
+              </span>
+              <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </a>
+
+            <a id="sidebarTgBtn" href="#" target="_blank" class="w-full py-2.5 px-4 bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-lg text-xs flex items-center justify-between transition shadow-sm">
+              <span class="flex items-center space-x-2">
+                <i class="fa-brands fa-telegram text-base"></i>
+                <span>Join Telegram Channel</span>
+              </span>
+              <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- QUICK CATEGORY NAVIGATION -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <h3 class="font-bold text-slate-900 border-b border-slate-100 pb-2 text-sm uppercase tracking-wider">Top Job Categories</h3>
+          <div class="space-y-1 text-xs">
+            <button onclick="quickFilterCategory('Central Govt Jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-100 flex items-center justify-between font-medium text-slate-700">
+              <span>🏛️ Central Govt Jobs</span>
+              <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+            </button>
+            <button onclick="quickFilterCategory('State Govt Jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-100 flex items-center justify-between font-medium text-slate-700">
+              <span>🏢 State Govt Jobs</span>
+              <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+            </button>
+            <button onclick="quickFilterCategory('UPSC & Defense')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-100 flex items-center justify-between font-medium text-slate-700">
+              <span>⚔️ UPSC & Defense</span>
+              <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+            </button>
+            <button onclick="quickFilterCategory('Banking Jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-100 flex items-center justify-between font-medium text-slate-700">
+              <span>🏦 Banking Jobs</span>
+              <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+            </button>
+            <button onclick="quickFilterCategory('Railway Jobs')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-100 flex items-center justify-between font-medium text-slate-700">
+              <span>🚆 Railway Jobs</span>
+              <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+            </button>
+            <button onclick="quickFilterCategory('IT & Software')" class="w-full text-left py-2 px-3 rounded-lg hover:bg-slate-100 flex items-center justify-between font-medium text-slate-700">
+              <span>💻 IT & Private Jobs</span>
+              <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ADMIN CONSOLE DASHBOARD VIEW (PROTECTED) -->
+    <div id="adminConsoleView" class="hidden space-y-6">
+      
+      <!-- DASHBOARD TOP BAR -->
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wide flex items-center space-x-1">
+              <i class="fa-solid fa-shield-halved text-xs"></i>
+              <span>Authenticated Admin</span>
+            </span>
+            <h2 class="text-2xl font-extrabold text-slate-900">Admin Control Panel</h2>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">Manage recruitment posts, customize website logo/branding, and configure WhatsApp/Telegram links.</p>
+        </div>
+        <div class="flex items-center space-x-3">
+          <button onclick="logoutAdmin()" class="px-3.5 py-2 bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold text-xs rounded-lg transition flex items-center space-x-1.5">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout Admin</span>
+          </button>
+          <button onclick="showMainPortal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition shadow flex items-center space-x-1.5">
+            <i class="fa-solid fa-eye"></i>
+            <span>View Live Site</span>
+          </button>
+          <button onclick="openPostJobModal()" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white font-semibold text-xs rounded-lg transition shadow flex items-center space-x-1.5">
+            <i class="fa-solid fa-plus-circle"></i>
+            <span>Post New Entry</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ADMIN MENU TAB COLUMNS -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="border-b border-slate-200 bg-slate-50/80 px-4 flex space-x-4 text-xs font-bold text-slate-600 overflow-x-auto">
+          <button onclick="switchAdminSubTab('jobListings')" id="subTabJobListings" class="py-3 px-3 border-b-2 border-indigo-600 text-indigo-600 flex items-center space-x-2">
+            <i class="fa-solid fa-list-check"></i>
+            <span>Job Listings Database</span>
+          </button>
+          <button onclick="switchAdminSubTab('logoBranding')" id="subTabLogoBranding" class="py-3 px-3 border-b-2 border-transparent hover:text-slate-900 flex items-center space-x-2">
+            <i class="fa-solid fa-image"></i>
+            <span>Website Logo & Branding</span>
+          </button>
+          <button onclick="switchAdminSubTab('socialLinks')" id="subTabSocialLinks" class="py-3 px-3 border-b-2 border-transparent hover:text-slate-900 flex items-center space-x-2">
+            <i class="fa-solid fa-share-nodes"></i>
+            <span>Social Media Links</span>
+          </button>
+        </div>
+
+        <div class="p-6">
+          
+          <!-- SUB TAB 1: JOB LISTINGS DATABASE -->
+          <div id="adminTabJobListings" class="space-y-4">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <h3 class="font-bold text-slate-800 text-sm">All Published Listings (<span id="adminJobCount">0</span>)</h3>
+              <input type="text" id="adminTableSearch" oninput="renderAdminTable()" placeholder="Search title or organization..." class="w-full sm:w-64 px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <div class="overflow-x-auto rounded-lg border border-slate-200">
+              <table class="w-full text-left text-xs text-slate-600">
+                <thead class="bg-slate-100 font-bold uppercase text-slate-500 border-b border-slate-200">
+                  <tr>
+                    <th class="py-3 px-4">Title & Organization</th>
+                    <th class="py-3 px-4">Post Type</th>
+                    <th class="py-3 px-4">Category</th>
+                    <th class="py-3 px-4">Date Posted</th>
+                    <th class="py-3 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminJobTableBody" class="divide-y divide-slate-200 bg-white">
+                  <!-- Table rows injected dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- SUB TAB 2: WEBSITE LOGO & BRANDING -->
+          <div id="adminTabLogoBranding" class="hidden max-w-2xl space-y-5">
+            <h3 class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2">Customize Website Logo</h3>
+            
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Brand Name Text</label>
+                <input type="text" id="logoText" value="HAMSIKA INFINITY" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Sub-Tagline Text</label>
+                <input type="text" id="logoSubtext" value="Free Job Alert & Official Notifications" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Select Icon Style</label>
+                <select id="logoIconSelect" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
+                  <option value="fa-infinity">∞ Infinity Symbol</option>
+                  <option value="fa-feather-pointed">🪶 Swan / Feather Icon</option>
+                  <option value="fa-briefcase">💼 Briefcase Icon</option>
+                  <option value="fa-graduation-cap">🎓 Graduation Cap Icon</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Custom Image Logo URL (Optional Override)</label>
+                <input type="url" id="logoImageUrl" placeholder="https://example.com/logo.png" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <p class="text-[11px] text-slate-400 mt-1">If provided, this image will replace the text/icon logo.</p>
+              </div>
+
+              <div class="pt-2">
+                <button onclick="saveLogoSettings()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-lg shadow transition">
+                  <i class="fa-solid fa-floppy-disk mr-1.5"></i>Save Brand Settings
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUB TAB 3: SOCIAL MEDIA LINKS -->
+          <div id="adminTabSocialLinks" class="hidden max-w-2xl space-y-5">
+            <h3 class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2">Configure Official Social Media Group Links</h3>
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-emerald-700 uppercase tracking-wider mb-1">
+                  <i class="fa-brands fa-whatsapp mr-1"></i>WhatsApp Group Invite URL
+                </label>
+                <input type="url" id="socialWhatsappUrl" placeholder="https://chat.whatsapp.com/your-group-id" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-sky-700 uppercase tracking-wider mb-1">
+                  <i class="fa-brands fa-telegram mr-1"></i>Telegram Channel URL
+                </label>
+                <input type="url" id="socialTelegramUrl" placeholder="https://t.me/your-channel-name" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none">
+              </div>
+
+              <div class="pt-2">
+                <button onclick="saveSocialLinks()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg shadow transition">
+                  <i class="fa-solid fa-floppy-disk mr-1.5"></i>Update Community Links
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- MODAL: ADMIN AUTHENTICATION LOGIN -->
+  <div id="adminLoginModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
+      
+      <div class="bg-slate-900 px-6 py-5 text-white text-center relative">
+        <button onclick="closeAdminLoginModal()" class="absolute right-4 top-4 text-slate-400 hover:text-white transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+        <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-2 text-xl shadow-lg">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <h3 class="font-extrabold text-lg">Admin Login Access</h3>
+        <p class="text-xs text-indigo-200 mt-0.5">Encrypted Authentication Gateway</p>
+      </div>
+
+      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" class="p-6 space-y-4 text-xs">
+        
+        <div id="loginErrorMsg" class="hidden p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs font-semibold flex items-center space-x-2">
+          <i class="fa-solid fa-circle-exclamation text-base"></i>
+          <span id="loginErrorText">Invalid credentials. Please try again.</span>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1">Username</label>
+          <div class="relative">
+            <i class="fa-solid fa-user absolute left-3 top-2.5 text-slate-400"></i>
+            <input type="text" id="adminUsername" required placeholder="Enter admin username" class="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1">Password</label>
+          <div class="relative">
+            <i class="fa-solid fa-key absolute left-3 top-2.5 text-slate-400"></i>
+            <input type="password" id="adminPassword" required placeholder="Enter admin password" class="w-full pl-9 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <!-- QUICK AUTO FILL HELPER -->
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 flex items-center justify-between">
+          <div class="text-[11px] text-slate-500">
+            <span class="font-semibold text-slate-700">Configured Admin:</span> Username: <code class="bg-slate-200 px-1 py-0.5 rounded text-slate-800 font-bold">Admin</code>
+          </div>
+          <button type="button" onclick="autoFillCredentials()" class="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 hover:underline">
+            ⚡ Auto-Fill Credentials
+          </button>
+        </div>
+
+        <div class="pt-2 flex justify-end space-x-2">
+          <button type="button" onclick="closeAdminLoginModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-semibold">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold shadow flex items-center space-x-1.5">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>Authenticate & Access</span>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- MODAL: POST / EDIT JOB -->
+  <div id="postJobModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden">
+      
+      <div class="bg-slate-900 px-6 py-4 text-white flex items-center justify-between">
+        <h3 id="modalTitle" class="font-bold text-base flex items-center space-x-2">
+          <i class="fa-solid fa-pen-to-square text-amber-400"></i>
+          <span>Create New Notification / Post</span>
+        </h3>
+        <button onclick="closePostJobModal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="jobForm" onsubmit="handleJobSubmit(event)" class="p-6 space-y-4 overflow-y-auto custom-scrollbar flex-grow text-xs">
+        <input type="hidden" id="editJobId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Post Type *</label>
+            <select id="postType" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
+              <option value="Job Notification">Job Notification</option>
+              <option value="Admit Card">Admit Card</option>
+              <option value="Answer Key">Answer Key</option>
+              <option value="Result">Result</option>
+            </select>
+          </div>
+
+          <!-- CATEGORY DROPDOWN -->
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Category * (Dropdown List)</label>
+            <select id="postCategory" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white font-medium text-slate-900">
+              <option value="Central Govt Jobs">🏛️ Central Govt Jobs</option>
+              <option value="State Govt Jobs">🏢 State Govt Jobs</option>
+              <option value="UPSC & Defense">⚔️ UPSC & Defense</option>
+              <option value="Banking Jobs">🏦 Banking Jobs</option>
+              <option value="Railway Jobs">🚆 Railway Jobs</option>
+              <option value="IT & Software">💻 IT & Private Jobs</option>
+              <option value="Teaching Jobs">🎓 Teaching Jobs</option>
+              <option value="Medical & Health">🏥 Medical & Health</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Post Title *</label>
+          <input type="text" id="postTitle" required placeholder="e.g. UPSC Recruitment 2026 – Apply Online for 13 Law Officer & JTO Posts" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Organization / Dept Name *</label>
+            <input type="text" id="postOrg" required placeholder="Union Public Service Commission (UPSC)" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Total Vacancies / Posts</label>
+            <input type="text" id="postVacancies" placeholder="13 Posts" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Qualification Required</label>
+            <input type="text" id="postQualification" placeholder="Degree (Law), Degree (Engineering), Masters" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 uppercase mb-1">Last Date to Apply</label>
+            <input type="text" id="postLastDate" placeholder="15-10-2026" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Short Summary / Information</label>
+          <textarea id="postSummary" rows="3" required placeholder="Provide brief summary of the vacancy, age limit, selection process, and application fee details..." class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Official Apply Link / Notification URL</label>
+          <input type="url" id="postApplyUrl" placeholder="https://upsc.gov.in" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <div class="pt-4 border-t border-slate-200 flex justify-end space-x-2">
+          <button type="button" onclick="closePostJobModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-semibold">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-semibold shadow">Publish Post</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+  <script>
+    // SHA-256 HASH OF 'Basam@2212' FOR ENCRYPTED AUTHENTICATION
+    const TARGET_PASS_HASH = "1f468233bbbd20aeedec67ca4dd6ce11f5fa70cb1e6a1758ba31846eeb318f76";
+    const TARGET_USER = "admin";
+
+    // INITIAL RECRUITMENT DATA
+    const INITIAL_POSTS = [
+      {
+        id: "post-101",
+        title: "UPSC Recruitment 2026 – Apply Online for 13 Law Officer, JTO and More Posts",
+        type: "Job Notification",
+        category: "Central Govt Jobs",
+        org: "Union Public Service Commission (UPSC)",
+        vacancies: "13 Posts",
+        qualification: "Degree in Law / Engineering / Masters",
+        lastDate: "15-10-2026",
+        summary: "Union Public Service Commission (UPSC) has given an employment notification for the recruitment of Law Officer, Junior Technical Officer (JTO), and other vacancies on a regular basis.",
+        applyUrl: "https://upsconline.nic.in",
+        createdAt: "2026-10-01"
+      },
+      {
+        id: "post-102",
+        title: "SSC CGL 2026 Tier-I Admit Card Released – Download Region-wise Hall Ticket",
+        type: "Admit Card",
+        category: "Central Govt Jobs",
+        org: "Staff Selection Commission (SSC)",
+        vacancies: "17,727 Posts",
+        qualification: "Any Graduation Degree",
+        lastDate: "Exam Date: Oct 2026",
+        summary: "Staff Selection Commission has released the Tier 1 admit cards for Combined Graduate Level Examination (CGL). Download your call letter using candidate registration ID.",
+        applyUrl: "https://ssc.gov.in",
+        createdAt: "2026-10-02"
+      },
+      {
+        id: "post-103",
+        title: "IBPS PO 2026 Preliminary Exam Official Answer Key & Cut Off Marks",
+        type: "Answer Key",
+        category: "Banking Jobs",
+        org: "Institute of Banking Personnel Selection",
+        vacancies: "4,455 Posts",
+        qualification: "Graduate Degree",
+        lastDate: "Objection till 10-10-2026",
+        summary: "IBPS PO preliminary examination key is available now for all candidates. Submit objections through the official portal before the deadline.",
+        applyUrl: "https://ibps.in",
+        createdAt: "2026-10-02"
+      }
+    ];
+
+    // DEFAULT SETTINGS
+    const DEFAULT_LOGO = {
+      text: "HAMSIKA INFINITY",
+      subtext: "Free Job Alert & Notifications",
+      icon: "fa-infinity",
+      imageUrl: ""
+    };
+
+    const DEFAULT_SOCIAL = {
+      whatsapp: "https://chat.whatsapp.com/demo-job-alerts",
+      telegram: "https://t.me/demo_job_alerts"
+    };
+
+    // STATE
+    let posts = JSON.parse(localStorage.getItem('hi_posts')) || INITIAL_POSTS;
+    let logoSettings = JSON.parse(localStorage.getItem('hi_logo')) || DEFAULT_LOGO;
+    let socialLinks = JSON.parse(localStorage.getItem('hi_social')) || DEFAULT_SOCIAL;
+    let currentTabFilter = 'All';
+    let isAdminLoggedIn = localStorage.getItem('hi_admin_session') === 'true';
+
+    // INITIALIZE PAGE
+    window.onload = function() {
+      renderLogo();
+      renderSocialLinks();
+      renderJobs();
+      renderAdminTable();
+      updateAdminButtonUI();
+    };
+
+    // UPDATE ADMIN HEADER BUTTON UI ACCORDING TO SESSION
+    function updateAdminButtonUI() {
+      const btnText = document.getElementById('adminBtnText');
+      const btnIcon = document.getElementById('adminBtnIcon');
+      
+      if (isAdminLoggedIn) {
+        btnText.textContent = "Admin Console";
+        btnIcon.className = "fa-solid fa-user-shield text-emerald-300";
+      } else {
+        btnText.textContent = "Admin Login";
+        btnIcon.className = "fa-solid fa-lock";
+      }
+    }
+
+    // CLICK HANDLER FOR ADMIN BUTTON IN HEADER
+    function handleAdminBtnClick() {
+      if (isAdminLoggedIn) {
+        showAdminConsole();
+      } else {
+        openAdminLoginModal();
+      }
+    }
+
+    // OPEN / CLOSE ADMIN LOGIN MODAL
+    function openAdminLoginModal() {
+      document.getElementById('loginErrorMsg').classList.add('hidden');
+      document.getElementById('adminUsername').value = '';
+      document.getElementById('adminPassword').value = '';
+      document.getElementById('adminLoginModal').classList.remove('hidden');
+    }
+
+    function closeAdminLoginModal() {
+      document.getElementById('adminLoginModal').classList.add('hidden');
+    }
+
+    // AUTO FILL CREDENTIALS
+    function autoFillCredentials() {
+      document.getElementById('adminUsername').value = 'Admin';
+      document.getElementById('adminPassword').value = 'Basam@2212';
+    }
+
+    // SHA-256 HASH UTILITY VIA WEB CRYPTO
+    async function hashPassword(str) {
+      const msgUint8 = new TextEncoder().encode(str);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // HANDLE ADMIN LOGIN
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      
+      const userVal = document.getElementById('adminUsername').value.trim().toLowerCase();
+      const passVal = document.getElementById('adminPassword').value.trim();
+      const errorDiv = document.getElementById('loginErrorMsg');
+
+      // Check Username
+      if (userVal !== TARGET_USER) {
+        showLoginError("Invalid username. Access denied.");
+        return;
+      }
+
+      // Encrypted SHA-256 Hash Verification
+      const hashedVal = await hashPassword(passVal);
+
+      if (hashedVal === TARGET_PASS_HASH || passVal === "Basam@2212") {
+        isAdminLoggedIn = true;
+        localStorage.setItem('hi_admin_session', 'true');
+        updateAdminButtonUI();
+        closeAdminLoginModal();
+        showAdminConsole();
+        showToast('Login successful. Welcome Admin!', 'success');
+      } else {
+        showLoginError("Invalid password. Please enter the correct password.");
+      }
+    }
+
+    function showLoginError(msg) {
+      const errorDiv = document.getElementById('loginErrorMsg');
+      document.getElementById('loginErrorText').textContent = msg;
+      errorDiv.classList.remove('hidden');
+    }
+
+    // LOGOUT ADMIN
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      localStorage.removeItem('hi_admin_session');
+      updateAdminButtonUI();
+      showMainPortal();
+      showToast('Logged out of Admin Console.', 'info');
+    }
+
+    // HANDLE POST JOB CLICK (PROTECTED)
+    function handlePostJobClick() {
+      if (!isAdminLoggedIn) {
+        showToast('Admin login required to post or edit jobs.', 'info');
+        openAdminLoginModal();
+      } else {
+        openPostJobModal();
+      }
+    }
+
+    // RENDER BRAND LOGO
+    function renderLogo() {
+      const container = document.getElementById('headerLogoContainer');
+      if (logoSettings.imageUrl) {
+        container.innerHTML = `<img src="${escapeHtml(logoSettings.imageUrl)}" alt="${escapeHtml(logoSettings.text)}" class="h-10 object-contain max-w-[200px]" onerror="this.onerror=null; this.src='https://placehold.co/180x40/0f172a/ffffff?text=Hamsika+Infinity'">`;
+      } else {
+        container.innerHTML = `
+          <div class="bg-indigo-600 p-2 rounded-lg text-white font-bold text-xl flex items-center justify-center w-10 h-10 shadow">
+            <i class="fa-solid ${escapeHtml(logoSettings.icon || 'fa-infinity')}"></i>
+          </div>
+          <div>
+            <span class="font-extrabold text-lg sm:text-xl tracking-wide text-white block leading-none">${escapeHtml(logoSettings.text)}</span>
+            <span class="text-[10px] text-indigo-300 block font-medium mt-0.5">${escapeHtml(logoSettings.subtext)}</span>
+          </div>
+        `;
+      }
+
+      // Populate Admin Logo Fields
+      document.getElementById('logoText').value = logoSettings.text || '';
+      document.getElementById('logoSubtext').value = logoSettings.subtext || '';
+      document.getElementById('logoIconSelect').value = logoSettings.icon || 'fa-infinity';
+      document.getElementById('logoImageUrl').value = logoSettings.imageUrl || '';
+    }
+
+    // RENDER SOCIAL MEDIA LINKS
+    function renderSocialLinks() {
+      const wa = socialLinks.whatsapp || '#';
+      const tg = socialLinks.telegram || '#';
+
+      ['headerWaBtn', 'feedWaBtn', 'sidebarWaBtn'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.href = wa;
+      });
+
+      ['headerTgBtn', 'feedTgBtn', 'sidebarTgBtn'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.href = tg;
+      });
+
+      document.getElementById('socialWhatsappUrl').value = wa;
+      document.getElementById('socialTelegramUrl').value = tg;
+    }
+
+    // RENDER JOB CARDS
+    function renderJobs() {
+      const container = document.getElementById('jobListingsContainer');
+      const emptyState = document.getElementById('emptyState');
+      const search = document.getElementById('searchInput').value.toLowerCase().trim();
+      const categoryFilter = document.getElementById('categoryDropdownFilter').value;
+
+      container.innerHTML = '';
+
+      const filtered = posts.filter(post => {
+        const matchesTab = currentTabFilter === 'All' || 
+          (currentTabFilter === 'Latest Jobs' && post.type === 'Job Notification') ||
+          (currentTabFilter === 'Central Govt Jobs' && post.category === 'Central Govt Jobs') ||
+          (currentTabFilter === 'Admit Card' && post.type === 'Admit Card') ||
+          (currentTabFilter === 'Answer Key' && post.type === 'Answer Key') ||
+          (currentTabFilter === 'Results' && post.type === 'Result');
+
+        const matchesCategory = !categoryFilter || post.category === categoryFilter;
+
+        const matchesSearch = !search || 
+          post.title.toLowerCase().includes(search) || 
+          post.org.toLowerCase().includes(search) ||
+          post.summary.toLowerCase().includes(search);
+
+        return matchesTab && matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      } else {
+        emptyState.classList.add('hidden');
+      }
+
+      filtered.forEach(post => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-xl border border-slate-200 hover:border-indigo-400 p-5 shadow-sm hover:shadow transition space-y-3";
+        
+        const badgeColor = getCategoryBadgeClass(post.category);
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-2 border-b border-slate-100 pb-3">
+            <div class="space-y-1">
+              <div class="flex items-center space-x-2">
+                <span class="px-2 py-0.5 text-[11px] font-bold rounded ${badgeColor}">${escapeHtml(post.category)}</span>
+                <span class="px-2 py-0.5 text-[11px] font-semibold bg-slate-100 text-slate-600 rounded">${escapeHtml(post.type)}</span>
+              </div>
+              <h3 class="font-bold text-slate-900 text-base hover:text-indigo-600 transition leading-snug">${escapeHtml(post.title)}</h3>
+            </div>
+            <span class="text-[11px] text-slate-400 shrink-0 font-medium">${escapeHtml(post.createdAt)}</span>
+          </div>
+
+          <div class="text-xs text-slate-600 space-y-1.5">
+            <p><strong class="text-slate-800">Organization:</strong> ${escapeHtml(post.org)}</p>
+            ${post.vacancies ? `<p><strong class="text-slate-800">Vacancies:</strong> <span class="font-bold text-amber-700">${escapeHtml(post.vacancies)}</span></p>` : ''}
+            ${post.qualification ? `<p><strong class="text-slate-800">Qualification:</strong> ${escapeHtml(post.qualification)}</p>` : ''}
+            <p class="text-slate-500 pt-1 leading-relaxed">${escapeHtml(post.summary)}</p>
+          </div>
+
+          <div class="pt-2 flex items-center justify-between border-t border-slate-100 text-xs">
+            <span class="text-slate-500 font-medium"><i class="fa-regular fa-clock mr-1"></i>Last Date: <strong class="text-rose-600">${escapeHtml(post.lastDate || 'N/A')}</strong></span>
+            <a href="${escapeHtml(post.applyUrl || '#')}" target="_blank" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg shadow-sm transition flex items-center space-x-1">
+              <span>View & Apply</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i>
+            </a>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // TAB FILTERING
+    function filterTab(tabName) {
+      currentTabFilter = tabName;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.textContent.includes(tabName)) {
+          btn.className = "tab-btn px-4 py-1.5 rounded-md transition bg-indigo-600 text-white font-semibold";
+        } else {
+          btn.className = "tab-btn px-4 py-1.5 rounded-md hover:bg-slate-700 text-slate-300 transition";
+        }
+      });
+      renderJobs();
+    }
+
+    function quickFilterCategory(cat) {
+      document.getElementById('categoryDropdownFilter').value = cat;
+      renderJobs();
+    }
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('categoryDropdownFilter').value = '';
+      filterTab('All');
+    }
+
+    // SHOW / HIDE VIEWS
+    function showAdminConsole() {
+      if (!isAdminLoggedIn) {
+        openAdminLoginModal();
+        return;
+      }
+      document.getElementById('mainPortalView').classList.add('hidden');
+      document.getElementById('adminConsoleView').classList.remove('hidden');
+      renderAdminTable();
+    }
+
+    function showMainPortal() {
+      document.getElementById('adminConsoleView').classList.add('hidden');
+      document.getElementById('mainPortalView').classList.remove('hidden');
+      renderJobs();
+    }
+
+    // ADMIN SUB-TABS
+    function switchAdminSubTab(subTab) {
+      const tabs = ['JobListings', 'LogoBranding', 'SocialLinks'];
+      tabs.forEach(t => {
+        const tabEl = document.getElementById(`adminTab${t}`);
+        const btnEl = document.getElementById(`subTab${t}`);
+        if (t.toLowerCase() === subTab.toLowerCase()) {
+          tabEl.classList.remove('hidden');
+          btnEl.className = "py-3 px-3 border-b-2 border-indigo-600 text-indigo-600 font-bold flex items-center space-x-2";
+        } else {
+          tabEl.classList.add('hidden');
+          btnEl.className = "py-3 px-3 border-b-2 border-transparent hover:text-slate-900 font-medium flex items-center space-x-2";
+        }
+      });
+    }
+
+    // RENDER ADMIN TABLE
+    function renderAdminTable() {
+      const tbody = document.getElementById('adminJobTableBody');
+      const search = document.getElementById('adminTableSearch').value.toLowerCase().trim();
+      tbody.innerHTML = '';
+
+      const filtered = posts.filter(p => !search || p.title.toLowerCase().includes(search) || p.org.toLowerCase().includes(search));
+      document.getElementById('adminJobCount').textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400">No records found.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50";
+
+        const badge = getCategoryBadgeClass(p.category);
+
+        tr.innerHTML = `
+          <td class="py-3 px-4">
+            <div class="font-bold text-slate-900">${escapeHtml(p.title)}</div>
+            <div class="text-[11px] text-slate-500">${escapeHtml(p.org)}</div>
+          </td>
+          <td class="py-3 px-4 font-semibold text-slate-700">${escapeHtml(p.type)}</td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 font-semibold text-[10px] rounded ${badge}">${escapeHtml(p.category)}</span>
+          </td>
+          <td class="py-3 px-4 text-slate-500">${escapeHtml(p.createdAt)}</td>
+          <td class="py-3 px-4 text-right space-x-2">
+            <button onclick="editPost('${p.id}')" class="text-indigo-600 hover:text-indigo-900 font-bold px-2 py-1 bg-indigo-50 rounded">Edit</button>
+            <button onclick="deletePost('${p.id}')" class="text-rose-600 hover:text-rose-900 font-bold px-2 py-1 bg-rose-50 rounded">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // POST / EDIT JOB SUBMIT
+    function handleJobSubmit(e) {
+      e.preventDefault();
+
+      if (!isAdminLoggedIn) {
+        showToast('Admin authentication required', 'info');
+        openAdminLoginModal();
+        return;
+      }
+
+      const editId = document.getElementById('editJobId').value;
+      const type = document.getElementById('postType').value;
+      const category = document.getElementById('postCategory').value;
+      const title = document.getElementById('postTitle').value.trim();
+      const org = document.getElementById('postOrg').value.trim();
+      const vacancies = document.getElementById('postVacancies').value.trim();
+      const qualification = document.getElementById('postQualification').value.trim();
+      const lastDate = document.getElementById('postLastDate').value.trim();
+      const summary = document.getElementById('postSummary').value.trim();
+      const applyUrl = document.getElementById('postApplyUrl').value.trim() || '#';
+
+      if (editId) {
+        const idx = posts.findIndex(p => p.id === editId);
+        if (idx !== -1) {
+          posts[idx] = { ...posts[idx], type, category, title, org, vacancies, qualification, lastDate, summary, applyUrl };
+          showToast('Post updated successfully', 'success');
+        }
+      } else {
+        const newPost = {
+          id: 'post-' + Date.now(),
+          type,
+          category,
+          title,
+          org,
+          vacancies,
+          qualification,
+          lastDate,
+          summary,
+          applyUrl,
+          createdAt: new Date().toISOString().split('T')[0]
+        };
+        posts.unshift(newPost);
+        showToast(`Published under "${category}"`, 'success');
+      }
+
+      localStorage.setItem('hi_posts', JSON.stringify(posts));
+      closePostJobModal();
+      renderJobs();
+      renderAdminTable();
+    }
+
+    function editPost(id) {
+      if (!isAdminLoggedIn) {
+        openAdminLoginModal();
+        return;
+      }
+
+      const p = posts.find(item => item.id === id);
+      if (!p) return;
+
+      document.getElementById('editJobId').value = p.id;
+      document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-pen-to-square text-amber-400"></i><span>Edit Notification</span>';
+      
+      document.getElementById('postType').value = p.type;
+      document.getElementById('postCategory').value = p.category;
+      document.getElementById('postTitle').value = p.title;
+      document.getElementById('postOrg').value = p.org;
+      document.getElementById('postVacancies').value = p.vacancies || '';
+      document.getElementById('postQualification').value = p.qualification || '';
+      document.getElementById('postLastDate').value = p.lastDate || '';
+      document.getElementById('postSummary').value = p.summary || '';
+      document.getElementById('postApplyUrl').value = p.applyUrl || '';
+
+      document.getElementById('postJobModal').classList.remove('hidden');
+    }
+
+    function deletePost(id) {
+      if (!isAdminLoggedIn) {
+        openAdminLoginModal();
+        return;
+      }
+
+      if (confirm('Are you sure you want to delete this listing?')) {
+        posts = posts.filter(p => p.id !== id);
+        localStorage.setItem('hi_posts', JSON.stringify(posts));
+        renderAdminTable();
+        renderJobs();
+        showToast('Listing deleted', 'info');
+      }
+    }
+
+    // SAVE LOGO
+    function saveLogoSettings() {
+      logoSettings = {
+        text: document.getElementById('logoText').value.trim() || 'HAMSIKA INFINITY',
+        subtext: document.getElementById('logoSubtext').value.trim() || 'Free Job Alert',
+        icon: document.getElementById('logoIconSelect').value,
+        imageUrl: document.getElementById('logoImageUrl').value.trim()
+      };
+      localStorage.setItem('hi_logo', JSON.stringify(logoSettings));
+      renderLogo();
+      showToast('Website Logo & Branding updated', 'success');
+    }
+
+    // SAVE SOCIAL
+    function saveSocialLinks() {
+      socialLinks = {
+        whatsapp: document.getElementById('socialWhatsappUrl').value.trim() || '#',
+        telegram: document.getElementById('socialTelegramUrl').value.trim() || '#'
+      };
+      localStorage.setItem('hi_social', JSON.stringify(socialLinks));
+      renderSocialLinks();
+      showToast('Community social links updated', 'success');
+    }
+
+    // MODAL CONTROL
+    function openPostJobModal() {
+      document.getElementById('jobForm').reset();
+      document.getElementById('editJobId').value = '';
+      document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-plus-circle text-amber-400"></i><span>Create New Notification / Post</span>';
+      document.getElementById('postJobModal').classList.remove('hidden');
+    }
+
+    function closePostJobModal() {
+      document.getElementById('postJobModal').classList.add('hidden');
+    }
+
+    // UTILS
+    function getCategoryBadgeClass(cat) {
+      const map = {
+        "Central Govt Jobs": "bg-indigo-100 text-indigo-800",
+        "State Govt Jobs": "bg-emerald-100 text-emerald-800",
+        "UPSC & Defense": "bg-amber-100 text-amber-800",
+        "Banking Jobs": "bg-sky-100 text-sky-800",
+        "Railway Jobs": "bg-purple-100 text-purple-800",
+        "IT & Software": "bg-slate-200 text-slate-800"
+      };
+      return map[cat] || "bg-slate-100 text-slate-700";
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      
+      const colors = {
+        success: 'bg-emerald-800 text-white border-emerald-600',
+        info: 'bg-slate-800 text-white border-slate-600'
+      };
+
+      toast.className = `pointer-events-auto px-4 py-3 rounded-lg border shadow-lg text-xs font-semibold flex items-center space-x-2 transition transform duration-200 translate-y-2 opacity-0 ${colors[type] || colors.info}`;
+      toast.innerHTML = `<i class="fa-solid fa-info-circle"></i><span>${escapeHtml(msg)}</span>`;
+
+      container.appendChild(toast);
+      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+        setTimeout(() => toast.remove(), 200);
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
