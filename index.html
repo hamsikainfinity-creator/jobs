@@ -8,10 +8,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
         .freejob-table th, .freejob-table td {
             border: 1px solid #cbd5e1;
-            padding: 8px 12px;
+            padding: 10px 14px;
             font-size: 13px;
         }
         .freejob-table th {
@@ -22,73 +27,88 @@
         .freejob-header {
             background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
         }
+        /* Custom scrollbar for tables & modals */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
 
     <!-- TOP HEADER / BRANDING -->
-    <header class="freejob-header text-white shadow-md">
+    <header class="freejob-header text-white shadow-lg sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
             <!-- Website Logo -->
             <a href="#" class="flex items-center gap-3" id="brandLogoLink">
-                <div id="brandLogoIconContainer" class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-xl font-bold">
+                <div id="brandLogoIconContainer" class="w-11 h-11 rounded-xl bg-blue-600/80 backdrop-blur border border-cyan-400/30 flex items-center justify-center text-xl font-bold shadow-inner transition-transform hover:scale-105">
                     <i id="brandLogoIcon" class="fa-solid fa-infinity text-cyan-300"></i>
                 </div>
                 <div>
-                    <h1 id="brandLogoText" class="text-2xl font-extrabold tracking-wide text-cyan-400">Hamsika Infinity</h1>
-                    <p id="brandLogoSubtext" class="text-xs text-slate-300">India's Premier Govt Job Portal</p>
+                    <h1 id="brandLogoText" class="text-2xl font-black tracking-wide text-cyan-400 drop-shadow-sm">Hamsika Infinity</h1>
+                    <p id="brandLogoSubtext" class="text-xs text-slate-300 font-medium">India's Premier Govt Job Portal</p>
                 </div>
             </a>
 
             <!-- Social Links & Admin Action -->
-            <div class="flex items-center gap-3">
-                <a id="hdrWhatsappBtn" href="https://chat.whatsapp.com/example-group-invite" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 font-medium transition">
-                    <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp Group
+            <div class="flex items-center flex-wrap gap-2.5">
+                <a id="hdrWhatsappBtn" href="https://chat.whatsapp.com/example-group-invite" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3.5 py-2 rounded-lg flex items-center gap-2 font-semibold shadow transition transform active:scale-95">
+                    <i class="fa-brands fa-whatsapp text-sm"></i> <span class="hidden sm:inline">WhatsApp Group</span>
                 </a>
-                <a id="hdrTelegramBtn" href="https://t.me/hamsikainfinity" target="_blank" class="bg-sky-500 hover:bg-sky-600 text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 font-medium transition">
-                    <i class="fa-brands fa-telegram text-sm"></i> Telegram Channel
+                <a id="hdrTelegramBtn" href="https://t.me/hamsikainfinity" target="_blank" class="bg-sky-500 hover:bg-sky-600 text-white text-xs px-3.5 py-2 rounded-lg flex items-center gap-2 font-semibold shadow transition transform active:scale-95">
+                    <i class="fa-brands fa-telegram text-sm"></i> <span class="hidden sm:inline">Telegram Channel</span>
                 </a>
-                <button onclick="openAdminModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs px-3.5 py-1.5 rounded shadow transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-lock"></i> Admin Portal
+                <button onclick="openAdminModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs px-4 py-2 rounded-lg shadow transition flex items-center gap-2 transform active:scale-95">
+                    <i class="fa-solid fa-user-shield"></i> <span id="adminBtnLabel">Admin Portal</span>
                 </button>
             </div>
         </div>
 
         <!-- MAIN TABS MENU -->
-        <nav class="bg-slate-900 border-t border-slate-700">
-            <div class="max-w-7xl mx-auto px-4 flex overflow-x-auto text-sm font-semibold">
-                <button onclick="switchTab('all')" id="tab-all" class="px-4 py-3 text-cyan-400 border-b-2 border-cyan-400 whitespace-nowrap hover:bg-slate-800 transition">
-                    <i class="fa-solid fa-newspaper mr-1"></i> All Updates
+        <nav class="bg-slate-900/90 backdrop-blur border-t border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 flex overflow-x-auto text-sm font-semibold scrollbar-none">
+                <button onclick="switchTab('all')" id="tab-all" class="px-5 py-3 text-cyan-400 border-b-2 border-cyan-400 whitespace-nowrap hover:bg-slate-800/50 transition">
+                    <i class="fa-solid fa-newspaper mr-1.5"></i> All Updates
                 </button>
-                <button onclick="switchTab('job')" id="tab-job" class="px-4 py-3 text-slate-300 hover:text-white border-b-2 border-transparent whitespace-nowrap hover:bg-slate-800 transition">
-                    <i class="fa-solid fa-briefcase mr-1"></i> Latest Jobs
+                <button onclick="switchTab('job')" id="tab-job" class="px-5 py-3 text-slate-300 hover:text-white border-b-2 border-transparent whitespace-nowrap hover:bg-slate-800/50 transition">
+                    <i class="fa-solid fa-briefcase mr-1.5"></i> Latest Jobs
                 </button>
-                <button onclick="switchTab('admit_card')" id="tab-admit_card" class="px-4 py-3 text-slate-300 hover:text-white border-b-2 border-transparent whitespace-nowrap hover:bg-slate-800 transition">
-                    <i class="fa-solid fa-id-card mr-1"></i> Admit Card
+                <button onclick="switchTab('admit_card')" id="tab-admit_card" class="px-5 py-3 text-slate-300 hover:text-white border-b-2 border-transparent whitespace-nowrap hover:bg-slate-800/50 transition">
+                    <i class="fa-solid fa-id-card mr-1.5"></i> Admit Card
                 </button>
-                <button onclick="switchTab('answer_key')" id="tab-answer_key" class="px-4 py-3 text-slate-300 hover:text-white border-b-2 border-transparent whitespace-nowrap hover:bg-slate-800 transition">
-                    <i class="fa-solid fa-key mr-1"></i> Answer Key
+                <button onclick="switchTab('answer_key')" id="tab-answer_key" class="px-5 py-3 text-slate-300 hover:text-white border-b-2 border-transparent whitespace-nowrap hover:bg-slate-800/50 transition">
+                    <i class="fa-solid fa-key mr-1.5"></i> Answer Key
                 </button>
-                <button onclick="switchTab('result')" id="tab-result" class="px-4 py-3 text-slate-300 hover:text-white border-b-2 border-transparent whitespace-nowrap hover:bg-slate-800 transition">
-                    <i class="fa-solid fa-square-poll-vertical mr-1"></i> Results
+                <button onclick="switchTab('result')" id="tab-result" class="px-5 py-3 text-slate-300 hover:text-white border-b-2 border-transparent whitespace-nowrap hover:bg-slate-800/50 transition">
+                    <i class="fa-solid fa-square-poll-vertical mr-1.5"></i> Results
                 </button>
             </div>
         </nav>
     </header>
 
-    <!-- SEARCH & CATEGORY FILTER -->
-    <div class="max-w-7xl mx-auto px-4 py-4">
-        <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex flex-wrap gap-3 items-center justify-between">
-            <div class="flex-1 min-w-[280px] relative">
-                <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400"></i>
-                <input type="text" id="searchInput" oninput="renderPosts()" placeholder="Search jobs, UPSC, Admit Cards, Results..." class="w-full pl-9 pr-4 py-2 text-sm border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none">
+    <!-- SEARCH & CATEGORY FILTER TOOLBAR -->
+    <div class="max-w-7xl mx-auto px-4 py-5 w-full">
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-4 items-center justify-between">
+            <div class="flex-1 min-w-[260px] relative">
+                <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                <input type="text" id="searchInput" oninput="renderPosts()" placeholder="Search jobs, UPSC, SSC, Admit Cards, Results..." class="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition">
             </div>
-            <div class="flex items-center gap-2">
-                <span class="text-xs font-bold text-slate-600">Category:</span>
-                <select id="categoryFilter" onchange="renderPosts()" class="border border-slate-300 rounded text-xs px-3 py-2 font-medium focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+                <span class="text-xs font-bold text-slate-600 whitespace-nowrap">Category:</span>
+                <select id="categoryFilter" onchange="renderPosts()" class="w-full sm:w-auto border border-slate-300 rounded-lg text-xs px-3.5 py-2.5 font-semibold focus:ring-2 focus:ring-blue-600 outline-none bg-white cursor-pointer">
                     <option value="ALL">All Categories</option>
                     <option value="Central Govt Jobs">🏛️ Central Govt Jobs</option>
-                    <option value="State Govt Jobs">🏛️️ State Govt Jobs</option>
+                    <option value="State Govt Jobs">🏛 State Govt Jobs</option>
                     <option value="Banking Jobs">🏦 Banking Jobs</option>
                     <option value="Railway Jobs">🚆 Railway Jobs</option>
                     <option value="Defense & UPSC Jobs">🛡️ Defense & UPSC Jobs</option>
@@ -101,15 +121,15 @@
     </div>
 
     <!-- MAIN BODY SECTION -->
-    <main class="max-w-7xl mx-auto px-4 pb-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <main class="max-w-7xl mx-auto px-4 pb-12 grid grid-cols-1 lg:grid-cols-3 gap-6 w-full flex-grow">
         
         <!-- LEFT 2 COLUMNS: POSTINGS LIST -->
         <div class="lg:col-span-2 space-y-4">
             <div class="flex justify-between items-center border-b-2 border-blue-900 pb-2">
-                <h2 id="currentSectionTitle" class="text-xl font-bold text-blue-900 uppercase tracking-tight">
-                    <i class="fa-solid fa-bell text-amber-500 mr-2"></i> Latest Postings & Notifications
+                <h2 id="currentSectionTitle" class="text-lg sm:text-xl font-extrabold text-blue-950 uppercase tracking-tight flex items-center gap-2">
+                    <i class="fa-solid fa-bell text-amber-500 animate-bounce"></i> Latest Postings & Notifications
                 </h2>
-                <span id="postCountBadge" class="bg-blue-100 text-blue-900 text-xs font-bold px-2.5 py-1 rounded-full">0 Alerts</span>
+                <span id="postCountBadge" class="bg-blue-100 text-blue-900 text-xs font-black px-3 py-1 rounded-full border border-blue-200">0 Alerts</span>
             </div>
 
             <!-- DYNAMIC POSTINGS CONTAINER -->
@@ -118,122 +138,162 @@
             </div>
         </div>
 
-        <!-- RIGHT SIDEBAR: QUICK LINKS & SOCIAL -->
+        <!-- RIGHT SIDEBAR: QUICK LINKS & SOCIAL WIDGETS -->
         <aside class="space-y-6">
             <!-- SOCIAL COMMUNITY BOX -->
-            <div class="bg-gradient-to-br from-slate-900 to-blue-950 text-white p-5 rounded-lg shadow border border-slate-800">
-                <h3 class="font-bold text-base text-cyan-400 mb-2 flex items-center gap-2">
-                    <i class="fa-solid fa-users"></i> Join Official Community
+            <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-blue-950 text-white p-6 rounded-xl shadow-md border border-slate-800">
+                <h3 class="font-extrabold text-base text-cyan-400 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-users text-lg"></i> Join Official Community
                 </h3>
-                <p class="text-xs text-slate-300 mb-4">Get instant notifications on WhatsApp & Telegram for Central Govt & State jobs.</p>
-                <div class="space-y-2.5">
-                    <a id="sdbWhatsappBtn" href="https://chat.whatsapp.com/example-group-invite" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded text-xs font-bold flex items-center justify-center gap-2 transition">
-                        <i class="fa-brands fa-whatsapp text-base"></i> Join WhatsApp Group
+                <p class="text-xs text-slate-300 mb-4 leading-relaxed">Get free instant notifications on WhatsApp & Telegram for Central & State Govt job alerts.</p>
+                <div class="space-y-3">
+                    <a id="sdbWhatsappBtn" href="https://chat.whatsapp.com/example-group-invite" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 px-4 rounded-lg text-xs font-bold flex items-center justify-center gap-2 shadow transition transform active:scale-95">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> Join WhatsApp Group
                     </a>
-                    <a id="sdbTelegramBtn" href="https://t.me/hamsikainfinity" target="_blank" class="w-full bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded text-xs font-bold flex items-center justify-center gap-2 transition">
-                        <i class="fa-brands fa-telegram text-base"></i> Join Telegram Channel
+                    <a id="sdbTelegramBtn" href="https://t.me/hamsikainfinity" target="_blank" class="w-full bg-sky-500 hover:bg-sky-600 text-white py-2.5 px-4 rounded-lg text-xs font-bold flex items-center justify-center gap-2 shadow transition transform active:scale-95">
+                        <i class="fa-brands fa-telegram text-lg"></i> Join Telegram Channel
                     </a>
                 </div>
             </div>
 
             <!-- CENTRAL GOVT JOBS WIDGET -->
-            <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
-                <h3 class="font-bold text-sm text-blue-900 uppercase border-b pb-2 mb-3 flex items-center justify-between">
-                    <span>🏛️ Central Govt Jobs</span>
-                    <i class="fa-solid fa-chevron-right text-xs"></i>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="font-bold text-sm text-blue-950 uppercase border-b border-slate-100 pb-3 mb-3 flex items-center justify-between">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-landmark text-blue-700"></i> Central Govt Jobs</span>
+                    <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
                 </h3>
-                <ul id="centralGovtSidebarList" class="space-y-2 text-xs">
+                <ul id="centralGovtSidebarList" class="space-y-2.5 text-xs">
                     <!-- Dynamic List -->
                 </ul>
+            </div>
+
+            <!-- QUICK SEARCH QUICK TAGS -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="font-bold text-sm text-blue-950 uppercase border-b border-slate-100 pb-3 mb-3">
+                    Popular Categories
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="filterByCategory('Banking Jobs')" class="bg-slate-100 hover:bg-blue-50 hover:text-blue-700 border text-slate-600 text-xs px-2.5 py-1 rounded-md font-medium transition">🏦 Banking</button>
+                    <button onclick="filterByCategory('Railway Jobs')" class="bg-slate-100 hover:bg-blue-50 hover:text-blue-700 border text-slate-600 text-xs px-2.5 py-1 rounded-md font-medium transition">🚆 Railway</button>
+                    <button onclick="filterByCategory('Defense & UPSC Jobs')" class="bg-slate-100 hover:bg-blue-50 hover:text-blue-700 border text-slate-600 text-xs px-2.5 py-1 rounded-md font-medium transition">🛡️ Defense/UPSC</button>
+                    <button onclick="filterByCategory('Teaching Jobs')" class="bg-slate-100 hover:bg-blue-50 hover:text-blue-700 border text-slate-600 text-xs px-2.5 py-1 rounded-md font-medium transition">🎓 Teaching</button>
+                </div>
             </div>
         </aside>
     </main>
 
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-xs mt-auto">
+        <div class="max-w-7xl mx-auto px-4 flex flex-wrap justify-between items-center gap-4 text-center sm:text-left">
+            <div>
+                <p class="font-bold text-white text-sm">Hamsika Infinity Portal</p>
+                <p class="mt-1">Providing latest government recruitment notices, exam dates, admit cards, and results.</p>
+            </div>
+            <div>
+                <p>&copy; 2026 Hamsika Infinity. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
     <!-- CONFIDENTIAL ADMIN LOGIN MODAL -->
-    <div id="adminModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative">
-            <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
+    <div id="adminModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 relative border border-slate-100 transform transition-all">
+            <button onclick="closeAdminModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 transition">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
             <div class="text-center mb-6">
-                <div class="w-12 h-12 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center mx-auto text-xl mb-2">
+                <div class="w-14 h-14 bg-blue-50 text-blue-900 border border-blue-200 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-3 shadow-inner">
                     <i class="fa-solid fa-user-shield"></i>
                 </div>
-                <h3 class="text-xl font-bold text-slate-800">Admin Portal Authentication</h3>
-                <p class="text-xs text-slate-500">Sign in to manage listings, branding & social links</p>
+                <h3 class="text-xl font-black text-slate-900">Admin Authentication</h3>
+                <p class="text-xs text-slate-500 mt-1">Log in to add/edit listings, branding & settings</p>
             </div>
             
             <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Username</label>
-                    <input type="text" id="adminUser" placeholder="Enter Username" required class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-3 top-3 text-slate-400 text-xs"></i>
+                        <input type="text" id="adminUser" placeholder="Enter Admin Username" required class="w-full border border-slate-300 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+                    </div>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
-                    <input type="password" id="adminPass" placeholder="Enter Password" required class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                    <div class="relative">
+                        <i class="fa-solid fa-key absolute left-3 top-3 text-slate-400 text-xs"></i>
+                        <input type="password" id="adminPass" placeholder="Enter Admin Password" required class="w-full border border-slate-300 rounded-lg pl-9 pr-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+                    </div>
                 </div>
-                <div id="loginErrorMsg" class="text-xs text-red-600 hidden font-bold">Invalid Admin credentials!</div>
-                <button type="submit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-2.5 rounded text-sm transition">Authenticate & Login</button>
+                <div id="loginErrorMsg" class="p-3 bg-red-50 border border-red-200 text-xs text-red-600 rounded-lg hidden font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation text-sm"></i> Invalid Admin credentials!
+                </div>
+                <button type="submit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-lg text-sm shadow transition transform active:scale-95">
+                    Authenticate & Login
+                </button>
             </form>
         </div>
     </div>
 
     <!-- FULL ADMIN CONSOLE DASHBOARD MODAL -->
-    <div id="adminConsoleModal" class="fixed inset-0 bg-slate-900/90 z-50 hidden overflow-y-auto p-4 lg:p-8">
-        <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden min-h-[80vh] flex flex-col">
+    <div id="adminConsoleModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden overflow-y-auto p-3 sm:p-6">
+        <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden min-h-[85vh] flex flex-col border border-slate-700">
             <!-- Console Header -->
-            <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center border-b border-slate-800">
+            <div class="bg-slate-900 text-white px-6 py-4 flex flex-wrap justify-between items-center gap-3 border-b border-slate-800">
                 <div class="flex items-center gap-3">
-                    <span class="bg-amber-500 text-slate-900 text-xs font-black px-2.5 py-1 rounded uppercase">Admin Active</span>
-                    <h2 class="text-lg font-bold">Hamsika Infinity Control Console</h2>
+                    <span class="bg-amber-500 text-slate-950 text-xs font-black px-2.5 py-1 rounded-md uppercase tracking-wider">Admin Panel</span>
+                    <h2 class="text-base sm:text-lg font-bold text-cyan-300">Hamsika Infinity Control Console</h2>
                 </div>
-                <div class="flex items-center gap-3">
-                    <button onclick="closeAdminConsole()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-3 py-2 rounded">
+                <div class="flex items-center gap-2.5">
+                    <button onclick="closeAdminConsole()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-3.5 py-2 rounded-lg border border-slate-700 transition">
                         <i class="fa-solid fa-eye mr-1"></i> View Live Site
                     </button>
-                    <button onclick="logoutAdmin()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-2 rounded">
+                    <button onclick="logoutAdmin()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow transition">
                         <i class="fa-solid fa-power-off mr-1"></i> Logout
                     </button>
                 </div>
             </div>
 
             <!-- Console Navigation Tabs -->
-            <div class="bg-slate-100 border-b border-slate-200 px-6 flex gap-4 text-xs font-bold">
-                <button onclick="switchAdminTab('posts')" id="admTab-posts" class="py-3 text-blue-900 border-b-2 border-blue-900 flex items-center gap-1.5">
-                    <i class="fa-solid fa-list-check"></i> Job Listings Database
+            <div class="bg-slate-100 border-b border-slate-200 px-6 flex gap-4 text-xs font-bold overflow-x-auto">
+                <button onclick="switchAdminTab('posts')" id="admTab-posts" class="py-3.5 text-blue-900 border-b-2 border-blue-900 flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-list-check"></i> Job Listings Management
                 </button>
-                <button onclick="switchAdminTab('branding')" id="admTab-branding" class="py-3 text-slate-600 hover:text-slate-900 border-b-2 border-transparent flex items-center gap-1.5">
-                    <i class="fa-solid fa-palette"></i> Website Logo & Branding
+                <button onclick="switchAdminTab('branding')" id="admTab-branding" class="py-3.5 text-slate-600 hover:text-slate-900 border-b-2 border-transparent flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-palette"></i> Website Logo & Header
                 </button>
-                <button onclick="switchAdminTab('social')" id="admTab-social" class="py-3 text-slate-600 hover:text-slate-900 border-b-2 border-transparent flex items-center gap-1.5">
-                    <i class="fa-solid fa-share-nodes"></i> Social Media Links
+                <button onclick="switchAdminTab('social')" id="admTab-social" class="py-3.5 text-slate-600 hover:text-slate-900 border-b-2 border-transparent flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-share-nodes"></i> Social Links Settings
                 </button>
             </div>
 
             <!-- Console Content Body -->
-            <div class="p-6 flex-1 overflow-y-auto">
+            <div class="p-4 sm:p-6 flex-1 overflow-y-auto bg-slate-50/50">
                 <!-- SECTION 1: JOB LISTINGS MANAGEMENT -->
-                <div id="admSection-posts" class="space-y-6">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-bold text-slate-800 text-base">All Published Listings</h3>
-                        <button onclick="openAddJobModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded flex items-center gap-1.5">
-                            <i class="fa-solid fa-plus"></i> Add New Job / Alert
+                <div id="admSection-posts" class="space-y-4">
+                    <div class="flex flex-wrap justify-between items-center gap-3 bg-white p-4 rounded-xl border border-slate-200">
+                        <div>
+                            <h3 class="font-black text-slate-800 text-base">Active Database Listings</h3>
+                            <p class="text-xs text-slate-500">Add, edit or delete notifications in real-time across the platform.</p>
+                        </div>
+                        <button onclick="openAddJobModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold px-4 py-2.5 rounded-lg shadow flex items-center gap-2 transition transform active:scale-95">
+                            <i class="fa-solid fa-plus text-sm"></i> Add New Job / Alert
                         </button>
                     </div>
-                    <div class="overflow-x-auto border border-slate-200 rounded-lg">
+
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl shadow-sm bg-white">
                         <table class="w-full text-left border-collapse text-xs">
-                            <thead class="bg-slate-800 text-white uppercase font-semibold">
+                            <thead class="bg-slate-900 text-slate-200 uppercase font-bold text-[11px] tracking-wider">
                                 <tr>
-                                    <th class="p-3">ID</th>
-                                    <th class="p-3">Title</th>
-                                    <th class="p-3">Category</th>
-                                    <th class="p-3">Type</th>
-                                    <th class="p-3">Vacancies</th>
-                                    <th class="p-3">Last Date</th>
-                                    <th class="p-3 text-right">Actions</th>
+                                    <th class="p-3.5">ID</th>
+                                    <th class="p-3.5">Title & Org</th>
+                                    <th class="p-3.5">Category</th>
+                                    <th class="p-3.5">Type</th>
+                                    <th class="p-3.5">Vacancies</th>
+                                    <th class="p-3.5">Last Date</th>
+                                    <th class="p-3.5 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="adminPostsTableBody" class="divide-y divide-slate-200 bg-white">
+                            <tbody id="adminPostsTableBody" class="divide-y divide-slate-200">
                                 <!-- Dynamic rows -->
                             </tbody>
                         </table>
@@ -241,43 +301,48 @@
                 </div>
 
                 <!-- SECTION 2: BRANDING & LOGO -->
-                <div id="admSection-branding" class="hidden space-y-6 max-w-2xl">
-                    <h3 class="font-bold text-slate-800 text-base border-b pb-2">Edit Website Logo & Header Text</h3>
+                <div id="admSection-branding" class="hidden space-y-6 max-w-2xl bg-white p-6 rounded-xl border border-slate-200">
+                    <h3 class="font-black text-slate-800 text-base border-b pb-3">Website Logo & Title Configuration</h3>
                     <form onsubmit="saveBrandingSettings(event)" class="space-y-4">
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Logo Text Name</label>
-                            <input type="text" id="cfgLogoText" value="Hamsika Infinity" required class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Logo Name / Title</label>
+                            <input type="text" id="cfgLogoText" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Subtext / Tagline</label>
-                            <input type="text" id="cfgLogoSubtext" value="India's Premier Govt Job Portal" required class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="text" id="cfgLogoSubtext" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Logo Icon Style</label>
-                            <select id="cfgLogoIcon" class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                            <select id="cfgLogoIcon" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none bg-white font-medium">
                                 <option value="fa-infinity">Infinity Symbol (∞)</option>
-                                <option value="fa-crow">Swan / Feather Symbol</option>
+                                <option value="fa-crow">Swan / Bird Symbol</option>
                                 <option value="fa-crown">Crown Symbol</option>
                                 <option value="fa-graduation-cap">Education / Career Symbol</option>
+                                <option value="fa-briefcase">Briefcase Symbol</option>
                             </select>
                         </div>
-                        <button type="submit" class="bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs px-5 py-2.5 rounded shadow">Save Logo Settings</button>
+                        <button type="submit" class="bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs px-6 py-2.5 rounded-lg shadow transition">
+                            Save Logo Settings
+                        </button>
                     </form>
                 </div>
 
                 <!-- SECTION 3: SOCIAL LINKS -->
-                <div id="admSection-social" class="hidden space-y-6 max-w-2xl">
-                    <h3 class="font-bold text-slate-800 text-base border-b pb-2">Update WhatsApp & Telegram Links</h3>
+                <div id="admSection-social" class="hidden space-y-6 max-w-2xl bg-white p-6 rounded-xl border border-slate-200">
+                    <h3 class="font-black text-slate-800 text-base border-b pb-3">Social Media Invite Links</h3>
                     <form onsubmit="saveSocialLinks(event)" class="space-y-4">
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">WhatsApp Group Invite Link</label>
-                            <input type="url" id="cfgWhatsappUrl" value="https://chat.whatsapp.com/example-group-invite" required class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                            <label class="block text-xs font-bold text-slate-700 mb-1"><i class="fa-brands fa-whatsapp text-emerald-600"></i> WhatsApp Group Invite Link</label>
+                            <input type="url" id="cfgWhatsappUrl" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Telegram Channel Link</label>
-                            <input type="url" id="cfgTelegramUrl" value="https://t.me/hamsikainfinity" required class="w-full border border-slate-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                            <label class="block text-xs font-bold text-slate-700 mb-1"><i class="fa-brands fa-telegram text-sky-500"></i> Telegram Channel Link</label>
+                            <input type="url" id="cfgTelegramUrl" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
                         </div>
-                        <button type="submit" class="bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs px-5 py-2.5 rounded shadow">Save Social Links</button>
+                        <button type="submit" class="bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs px-6 py-2.5 rounded-lg shadow transition">
+                            Save Social Links
+                        </button>
                     </form>
                 </div>
             </div>
@@ -285,26 +350,26 @@
     </div>
 
     <!-- ADD / EDIT JOB MODAL -->
-    <div id="jobFormModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeJobFormModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
+    <div id="jobFormModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto border border-slate-100">
+            <button onclick="closeJobFormModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
-            <h3 id="jobFormModalTitle" class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Add New Job Notification</h3>
+            <h3 id="jobFormModalTitle" class="text-lg font-black text-slate-900 mb-4 border-b pb-3">Add New Job Notification</h3>
             <form id="jobPostForm" onsubmit="handleSaveJobPost(event)" class="space-y-4 text-xs">
                 <input type="hidden" id="editJobId">
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1">Title / Heading *</label>
-                    <input type="text" id="postTitle" required placeholder="e.g. UPSC Recruitment 2026 - Apply Online for 13 Law Officer & JTO Posts" class="w-full border border-slate-300 rounded p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                    <label class="block font-bold text-slate-700 mb-1">Title / Notification Name *</label>
+                    <input type="text" id="postTitle" required placeholder="e.g. UPSC Recruitment 2026 – Apply Online for 13 Law Officer Posts" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-600 outline-none">
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Organization Name *</label>
-                        <input type="text" id="postOrg" required placeholder="e.g. Union Public Service Commission (UPSC)" class="w-full border border-slate-300 rounded p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                        <input type="text" id="postOrg" required placeholder="e.g. Union Public Service Commission (UPSC)" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-600 outline-none">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Post Type *</label>
-                        <select id="postType" class="w-full border border-slate-300 rounded p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                        <select id="postType" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-600 outline-none bg-white font-medium">
                             <option value="job">Job Notification</option>
                             <option value="admit_card">Admit Card</option>
                             <option value="answer_key">Answer Key</option>
@@ -314,8 +379,8 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block font-bold text-slate-700 mb-1">Category Dropdown *</label>
-                        <select id="postCategory" required class="w-full border border-slate-300 rounded p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none font-bold">
+                        <label class="block font-bold text-slate-700 mb-1">Category *</label>
+                        <select id="postCategory" required class="w-full border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-600 outline-none bg-white font-bold">
                             <option value="Central Govt Jobs">🏛️ Central Govt Jobs</option>
                             <option value="State Govt Jobs">🏛️ State Govt Jobs</option>
                             <option value="Banking Jobs">🏦 Banking Jobs</option>
@@ -328,60 +393,59 @@
                     </div>
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Total Vacancies</label>
-                        <input type="number" id="postVacancies" placeholder="13" class="w-full border border-slate-300 rounded p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                        <input type="number" id="postVacancies" placeholder="e.g. 13" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-600 outline-none">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Qualification Required</label>
-                        <input type="text" id="postQual" placeholder="Degree in Law / Master Degree" class="w-full border border-slate-300 rounded p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                        <input type="text" id="postQual" placeholder="e.g. Degree in Law (LL.B) / Graduation" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-600 outline-none">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Application Fee</label>
-                        <input type="text" id="postFee" placeholder="₹25 for Gen/OBC (NIL for SC/ST/Female)" class="w-full border border-slate-300 rounded p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                        <input type="text" id="postFee" placeholder="e.g. ₹25/- for Gen/OBC (NIL for SC/ST)" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-600 outline-none">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Start Date</label>
-                        <input type="date" id="postStart" class="w-full border border-slate-300 rounded p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                        <input type="date" id="postStart" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-600 outline-none">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Last Date to Apply</label>
-                        <input type="date" id="postLast" class="w-full border border-slate-300 rounded p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                        <input type="date" id="postLast" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-600 outline-none">
                     </div>
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-1">Apply Online URL</label>
-                    <input type="url" id="postApplyUrl" placeholder="https://upsconline.nic.in" class="w-full border border-slate-300 rounded p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                    <input type="url" id="postApplyUrl" placeholder="https://upsconline.nic.in" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-600 outline-none">
                 </div>
                 <div>
                     <label class="block font-bold text-slate-700 mb-1">Detailed Description / Rules</label>
-                    <textarea id="postDetails" rows="4" placeholder="Enter post summary, selection process..." class="w-full border border-slate-300 rounded p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                    <textarea id="postDetails" rows="4" placeholder="Enter recruitment overview, selection process..." class="w-full border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-blue-600 outline-none"></textarea>
                 </div>
-                <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="closeJobFormModal()" class="px-4 py-2 border rounded font-bold">Cancel</button>
-                    <button type="submit" class="bg-blue-900 hover:bg-blue-800 text-white font-bold px-5 py-2 rounded">Publish Notification</button>
+                <div class="flex justify-end gap-3 pt-3 border-t">
+                    <button type="button" onclick="closeJobFormModal()" class="px-4 py-2 border rounded-lg font-bold text-slate-600 hover:bg-slate-50">Cancel</button>
+                    <button type="submit" class="bg-blue-900 hover:bg-blue-800 text-white font-bold px-6 py-2 rounded-lg shadow">Publish Listing</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- DETAILED VIEW MODAL -->
-    <div id="detailViewModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-lg shadow-2xl max-w-4xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeDetailModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600">
+    <!-- DETAILED POSTING VIEW MODAL -->
+    <div id="detailViewModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto border border-slate-100">
+            <button onclick="closeDetailModal()" class="absolute right-4 top-4 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
             <div id="detailViewContent">
-                <!-- Dynamically Rendered Detailed FreeJobAlert Style View -->
+                <!-- Dynamic Content -->
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // INITIAL STATE & SEED DATA
+        // GLOBAL STATE MANAGEMENT
         let activeTab = 'all';
         let isAdminLoggedIn = false;
 
@@ -399,43 +463,88 @@
                 lastDate: "2026-03-27",
                 applyUrl: "https://upsconline.nic.in",
                 details: "Union Public Service Commission (UPSC) has published a recruitment notification for Law Officer, Junior Translation Officer (JTO), and other posts on a regular basis."
+            },
+            {
+                id: 102,
+                title: "SSC CGL 2026 Exam Result & Tier-1 Answer Key Out",
+                org: "Staff Selection Commission (SSC)",
+                type: "result",
+                category: "Central Govt Jobs",
+                vacancies: 17727,
+                qualification: "Any Bachelor Degree",
+                fee: "₹100/-",
+                startDate: "2026-01-10",
+                lastDate: "2026-02-15",
+                applyUrl: "https://ssc.gov.in",
+                details: "SSC Combined Graduate Level Tier 1 official result and final answer key published."
+            },
+            {
+                id: 103,
+                title: "SBI PO Recruitment 2026 - Admit Card Download Link Active",
+                org: "State Bank of India (SBI)",
+                type: "admit_card",
+                category: "Banking Jobs",
+                vacancies: 2000,
+                qualification: "Graduation in any discipline",
+                fee: "₹750/-",
+                startDate: "2026-02-01",
+                lastDate: "2026-02-28",
+                applyUrl: "https://sbi.co.in/careers",
+                details: "Download SBI Probationary Officer (PO) Preliminary examination hall ticket."
             }
         ];
 
-        // LOAD / SAVE STORAGE
+        // RELIABLE LOCAL STORAGE HELPERS
         function fetchPostsData() {
-            const stored = localStorage.getItem('hamsika_posts');
-            if (!stored) {
-                localStorage.setItem('hamsika_posts', JSON.stringify(defaultPosts));
+            try {
+                const stored = localStorage.getItem('hamsika_posts');
+                if (!stored) {
+                    localStorage.setItem('hamsika_posts', JSON.stringify(defaultPosts));
+                    return defaultPosts;
+                }
+                return JSON.parse(stored);
+            } catch (e) {
+                console.error("Storage fetch error:", e);
                 return defaultPosts;
             }
-            return JSON.parse(stored);
         }
 
         function savePostsData(posts) {
-            localStorage.setItem('hamsika_posts', JSON.stringify(posts));
-            renderPosts();
-            renderAdminTable();
+            try {
+                localStorage.setItem('hamsika_posts', JSON.stringify(posts));
+                // INSTANT REAL-TIME DOM SYNCHRONIZATION
+                renderPosts();
+                if (isAdminLoggedIn) {
+                    renderAdminTable();
+                }
+            } catch (e) {
+                console.error("Storage save error:", e);
+            }
         }
 
-        // SWITCH TAB FILTER
+        // TAB NAVIGATION
         function switchTab(type) {
             activeTab = type;
             ['all', 'job', 'admit_card', 'answer_key', 'result'].forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
                 if (t === type) {
-                    btn.className = "px-4 py-3 text-cyan-400 border-b-2 border-cyan-400 whitespace-nowrap hover:bg-slate-800 transition";
+                    btn.className = "px-5 py-3 text-cyan-400 border-b-2 border-cyan-400 whitespace-nowrap hover:bg-slate-800/50 transition font-bold";
                 } else {
-                    btn.className = "px-4 py-3 text-slate-300 hover:text-white border-b-2 border-transparent whitespace-nowrap hover:bg-slate-800 transition";
+                    btn.className = "px-5 py-3 text-slate-300 hover:text-white border-b-2 border-transparent whitespace-nowrap hover:bg-slate-800/50 transition";
                 }
             });
             renderPosts();
         }
 
-        // RENDER POSTS TO HOMEPAGE
+        function filterByCategory(cat) {
+            document.getElementById('categoryFilter').value = cat;
+            renderPosts();
+        }
+
+        // RENDER HOMEPAGE POSTINGS
         function renderPosts() {
             const posts = fetchPostsData();
-            const search = document.getElementById('searchInput').value.toLowerCase();
+            const search = document.getElementById('searchInput').value.toLowerCase().trim();
             const cat = document.getElementById('categoryFilter').value;
 
             const filtered = posts.filter(p => {
@@ -450,28 +559,40 @@
             container.innerHTML = '';
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="bg-white p-8 text-center text-slate-500 rounded border">No job postings found matching criteria.</div>`;
+                container.innerHTML = `
+                    <div class="bg-white p-8 text-center text-slate-500 rounded-xl border border-slate-200">
+                        <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-300"></i>
+                        <p class="font-bold">No postings found matching your current filter.</p>
+                    </div>`;
                 return;
             }
 
             filtered.forEach(post => {
                 const card = document.createElement('div');
-                card.className = "bg-white border border-slate-300 rounded-lg p-5 shadow-sm hover:shadow transition";
+                card.className = "bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition duration-200";
+                
+                const typeLabels = {
+                    'job': 'Job Notification',
+                    'admit_card': 'Admit Card',
+                    'answer_key': 'Answer Key',
+                    'result': 'Result'
+                };
+
                 card.innerHTML = `
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="bg-blue-900 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase">${post.type.replace('_', ' ')}</span>
-                        <span class="bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-300">${post.category}</span>
+                    <div class="flex items-center gap-2 mb-2 flex-wrap">
+                        <span class="bg-blue-900 text-white text-[10px] font-black px-2.5 py-0.5 rounded uppercase tracking-wider">${typeLabels[post.type] || post.type}</span>
+                        <span class="bg-amber-100 text-amber-900 text-[10px] font-bold px-2.5 py-0.5 rounded border border-amber-300">${post.category}</span>
                     </div>
-                    <h3 class="text-base font-bold text-blue-900 hover:underline cursor-pointer" onclick="openDetailView(${post.id})">${post.title}</h3>
-                    <p class="text-xs text-slate-600 mt-1 font-medium">${post.org}</p>
+                    <h3 class="text-base font-black text-blue-950 hover:text-blue-700 cursor-pointer transition leading-snug" onclick="openDetailView(${post.id})">${post.title}</h3>
+                    <p class="text-xs text-slate-600 mt-1 font-semibold flex items-center gap-1.5"><i class="fa-solid fa-building text-slate-400"></i> ${post.org}</p>
                     
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 pt-3 border-t text-xs text-slate-700">
-                        <div><span class="text-slate-400 block text-[10px]">Vacancies:</span> <strong>${post.vacancies || 'N/A'}</strong></div>
-                        <div><span class="text-slate-400 block text-[10px]">Qualification:</span> <strong class="truncate block">${post.qualification || 'N/A'}</strong></div>
-                        <div><span class="text-slate-400 block text-[10px]">Last Date:</span> <strong class="text-red-600">${post.lastDate || 'N/A'}</strong></div>
-                        <div class="text-right">
-                            <button onclick="openDetailView(${post.id})" class="bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs px-3 py-1.5 rounded">
-                                View Details <i class="fa-solid fa-arrow-right ml-1"></i>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 pt-3 border-t border-slate-100 text-xs text-slate-700">
+                        <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Vacancies</span> <strong class="text-slate-800">${post.vacancies || 'N/A'}</strong></div>
+                        <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Qualification</span> <strong class="truncate block text-slate-800">${post.qualification || 'N/A'}</strong></div>
+                        <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Last Date</span> <strong class="text-red-600">${post.lastDate || 'N/A'}</strong></div>
+                        <div class="text-right flex items-end justify-end">
+                            <button onclick="openDetailView(${post.id})" class="bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition shadow-sm">
+                                Details <i class="fa-solid fa-arrow-right ml-1"></i>
                             </button>
                         </div>
                     </div>
@@ -483,12 +604,21 @@
             const centralPosts = posts.filter(p => p.category === 'Central Govt Jobs').slice(0, 5);
             const sideList = document.getElementById('centralGovtSidebarList');
             sideList.innerHTML = '';
-            centralPosts.forEach(cp => {
-                sideList.innerHTML += `<li class="border-b pb-1.5"><a href="#" onclick="openDetailView(${cp.id})" class="text-blue-900 hover:underline font-semibold block">${cp.title}</a></li>`;
-            });
+            if (centralPosts.length === 0) {
+                sideList.innerHTML = '<li class="text-slate-400 italic">No central jobs listed.</li>';
+            } else {
+                centralPosts.forEach(cp => {
+                    sideList.innerHTML += `
+                        <li class="border-b border-slate-100 pb-2">
+                            <a href="#" onclick="openDetailView(${cp.id})" class="text-blue-950 hover:text-blue-700 font-bold block leading-snug transition">
+                                <i class="fa-solid fa-angle-right text-cyan-600 text-xs mr-1"></i> ${cp.title}
+                            </a>
+                        </li>`;
+                });
+            }
         }
 
-        // DETAILED FREEJOBALERT VIEW
+        // DETAILED VIEW MODAL
         function openDetailView(id) {
             const posts = fetchPostsData();
             const post = posts.find(p => p.id === id);
@@ -498,15 +628,15 @@
             modalContent.innerHTML = `
                 <div class="text-center border-b pb-4 mb-4">
                     <span class="bg-amber-100 text-amber-900 font-bold text-xs px-3 py-1 rounded-full border border-amber-300">${post.category}</span>
-                    <h2 class="text-xl font-extrabold text-blue-950 mt-2">${post.title}</h2>
-                    <p class="text-xs font-bold text-slate-600">${post.org}</p>
+                    <h2 class="text-xl font-black text-blue-950 mt-3 leading-snug">${post.title}</h2>
+                    <p class="text-xs font-bold text-slate-600 mt-1"><i class="fa-solid fa-building"></i> ${post.org}</p>
                 </div>
 
-                <div class="freejob-table my-4">
+                <div class="freejob-table my-4 overflow-x-auto">
                     <table class="w-full">
-                        <tr><th colspan="2" class="text-center uppercase">${post.org} Notification Details</th></tr>
-                        <tr><td class="font-bold w-1/3">Total Vacancies</td><td>${post.vacancies}</td></tr>
-                        <tr><td class="font-bold">Post Type</td><td class="uppercase">${post.type}</td></tr>
+                        <tr><th colspan="2" class="text-center uppercase tracking-wide">${post.org} Official Summary</th></tr>
+                        <tr><td class="font-bold w-1/3">Total Vacancies</td><td>${post.vacancies || 'N/A'}</td></tr>
+                        <tr><td class="font-bold">Post Type</td><td class="uppercase font-bold text-blue-900">${post.type}</td></tr>
                         <tr><td class="font-bold">Application Fee</td><td>${post.fee || 'N/A'}</td></tr>
                         <tr><td class="font-bold">Qualification Required</td><td>${post.qualification || 'N/A'}</td></tr>
                         <tr><td class="font-bold">Start Date</td><td>${post.startDate || 'N/A'}</td></tr>
@@ -514,14 +644,14 @@
                     </table>
                 </div>
 
-                <div class="bg-slate-50 p-4 rounded border text-xs text-slate-700 leading-relaxed mb-4">
-                    <h4 class="font-bold text-slate-900 mb-2">Detailed Information & Description:</h4>
-                    <p>${post.details || 'Check official link for detailed notification parameters.'}</p>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 leading-relaxed mb-6">
+                    <h4 class="font-bold text-slate-900 text-sm mb-2">Description & Instructions:</h4>
+                    <p class="whitespace-pre-line">${post.details || 'Visit official notification link for full details and syllabus.'}</p>
                 </div>
 
                 <div class="flex justify-center gap-4">
-                    <a href="${post.applyUrl || '#'}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded shadow text-xs flex items-center gap-2">
-                        <i class="fa-solid fa-paper-plane"></i> Apply Online Direct Link
+                    <a href="${post.applyUrl || '#'}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-6 py-3 rounded-lg shadow-md text-xs flex items-center gap-2 transition transform active:scale-95">
+                        <i class="fa-solid fa-paper-plane text-sm"></i> Apply Online Direct Link
                     </a>
                 </div>
             `;
@@ -532,7 +662,7 @@
             document.getElementById('detailViewModal').classList.add('hidden');
         }
 
-        // DIRECT MATCHING AUTHENTICATION LOGIC
+        // ADMIN LOGIN AUTHENTICATION (DIRECT CHECK)
         function openAdminModal() {
             if (isAdminLoggedIn) {
                 openAdminConsole();
@@ -552,8 +682,10 @@
             const u = document.getElementById('adminUser').value.trim();
             const p = document.getElementById('adminPass').value.trim();
 
+            // EXACT CREDENTIALS: Username: Admin | Password: Basam@2212
             if (u === 'Admin' && p === 'Basam@2212') {
                 isAdminLoggedIn = true;
+                document.getElementById('adminBtnLabel').innerText = "Console Active";
                 closeAdminModal();
                 openAdminConsole();
             } else {
@@ -563,6 +695,7 @@
 
         function logoutAdmin() {
             isAdminLoggedIn = false;
+            document.getElementById('adminBtnLabel').innerText = "Admin Portal";
             closeAdminConsole();
         }
 
@@ -583,23 +716,27 @@
 
             posts.forEach(p => {
                 const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
                 tr.innerHTML = `
-                    <td class="p-3 font-mono text-slate-500">${p.id}</td>
-                    <td class="p-3 font-bold text-blue-900">${p.title}</td>
-                    <td class="p-3"><span class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded border">${p.category}</span></td>
-                    <td class="p-3 uppercase font-bold text-[10px]">${p.type}</td>
-                    <td class="p-3">${p.vacancies || '-'}</td>
-                    <td class="p-3 font-bold text-red-600">${p.lastDate || '-'}</td>
-                    <td class="p-3 text-right space-x-2">
-                        <button onclick="editJobPost(${p.id})" class="bg-blue-600 text-white px-2.5 py-1 rounded font-bold">Edit</button>
-                        <button onclick="deleteJobPost(${p.id})" class="bg-red-600 text-white px-2.5 py-1 rounded font-bold">Delete</button>
+                    <td class="p-3.5 font-mono text-slate-500 font-bold">${p.id}</td>
+                    <td class="p-3.5">
+                        <p class="font-bold text-blue-950">${p.title}</p>
+                        <p class="text-[11px] text-slate-500">${p.org}</p>
+                    </td>
+                    <td class="p-3.5"><span class="bg-slate-100 text-slate-800 px-2.5 py-1 rounded-md border text-[11px] font-semibold">${p.category}</span></td>
+                    <td class="p-3.5 font-black uppercase text-[10px] text-blue-900">${p.type}</td>
+                    <td class="p-3.5 font-bold">${p.vacancies || '-'}</td>
+                    <td class="p-3.5 font-bold text-red-600">${p.lastDate || '-'}</td>
+                    <td class="p-3.5 text-right space-x-1 whitespace-nowrap">
+                        <button onclick="editJobPost(${p.id})" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md font-bold text-[11px] transition">Edit</button>
+                        <button onclick="deleteJobPost(${p.id})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md font-bold text-[11px] transition">Delete</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        // ADD / EDIT JOB MODAL LOGIC
+        // ADD / EDIT JOB MODAL CONTROL
         function openAddJobModal() {
             document.getElementById('editJobId').value = '';
             document.getElementById('jobPostForm').reset();
@@ -621,7 +758,7 @@
             document.getElementById('postOrg').value = p.org;
             document.getElementById('postType').value = p.type;
             document.getElementById('postCategory').value = p.category;
-            document.getElementById('postVacancies').value = p.vacancies;
+            document.getElementById('postVacancies').value = p.vacancies || '';
             document.getElementById('postQual').value = p.qualification || '';
             document.getElementById('postFee').value = p.fee || '';
             document.getElementById('postStart').value = p.startDate || '';
@@ -640,17 +777,17 @@
 
             const postObj = {
                 id: editId ? parseInt(editId) : Date.now(),
-                title: document.getElementById('postTitle').value,
-                org: document.getElementById('postOrg').value,
+                title: document.getElementById('postTitle').value.trim(),
+                org: document.getElementById('postOrg').value.trim(),
                 type: document.getElementById('postType').value,
                 category: document.getElementById('postCategory').value,
                 vacancies: parseInt(document.getElementById('postVacancies').value) || 0,
-                qualification: document.getElementById('postQual').value,
-                fee: document.getElementById('postFee').value,
+                qualification: document.getElementById('postQual').value.trim(),
+                fee: document.getElementById('postFee').value.trim(),
                 startDate: document.getElementById('postStart').value,
                 lastDate: document.getElementById('postLast').value,
-                applyUrl: document.getElementById('postApplyUrl').value,
-                details: document.getElementById('postDetails').value
+                applyUrl: document.getElementById('postApplyUrl').value.trim(),
+                details: document.getElementById('postDetails').value.trim()
             };
 
             if (editId) {
@@ -671,14 +808,14 @@
             savePostsData(posts);
         }
 
-        // CONSOLE TABS
+        // CONSOLE TABS SWITCHING
         function switchAdminTab(tab) {
             ['posts', 'branding', 'social'].forEach(t => {
                 document.getElementById(`admSection-${t}`).classList.add('hidden');
-                document.getElementById(`admTab-${t}`).className = "py-3 text-slate-600 hover:text-slate-900 border-b-2 border-transparent flex items-center gap-1.5";
+                document.getElementById(`admTab-${t}`).className = "py-3.5 text-slate-600 hover:text-slate-900 border-b-2 border-transparent flex items-center gap-2 whitespace-nowrap";
             });
             document.getElementById(`admSection-${tab}`).classList.remove('hidden');
-            document.getElementById(`admTab-${tab}`).className = "py-3 text-blue-900 border-b-2 border-blue-900 flex items-center gap-1.5";
+            document.getElementById(`admTab-${tab}`).className = "py-3.5 text-blue-900 border-b-2 border-blue-900 flex items-center gap-2 whitespace-nowrap font-bold";
         }
 
         // LOGO BRANDING SETTINGS
@@ -693,7 +830,7 @@
             document.getElementById('brandLogoIcon').className = `fa-solid ${icn} text-cyan-300`;
 
             localStorage.setItem('hamsika_logo', JSON.stringify({ text: txt, subtext: sub, icon: icn }));
-            alert("Website logo updated successfully!");
+            alert("Website logo & title updated successfully!");
         }
 
         // SOCIAL LINKS SETTINGS
@@ -711,17 +848,24 @@
             alert("Social links updated successfully!");
         }
 
-        // INITIALIZE ON LOAD
+        // INITIALIZATION
         window.addEventListener('DOMContentLoaded', () => {
             renderPosts();
 
-            // Load saved logo
+            // Load saved logo settings
             const savedLogo = localStorage.getItem('hamsika_logo');
             if (savedLogo) {
                 const l = JSON.parse(savedLogo);
                 document.getElementById('brandLogoText').innerText = l.text;
                 document.getElementById('brandLogoSubtext').innerText = l.subtext;
                 document.getElementById('brandLogoIcon').className = `fa-solid ${l.icon} text-cyan-300`;
+                document.getElementById('cfgLogoText').value = l.text;
+                document.getElementById('cfgLogoSubtext').value = l.subtext;
+                document.getElementById('cfgLogoIcon').value = l.icon;
+            } else {
+                document.getElementById('cfgLogoText').value = "Hamsika Infinity";
+                document.getElementById('cfgLogoSubtext').value = "India's Premier Govt Job Portal";
+                document.getElementById('cfgLogoIcon').value = "fa-infinity";
             }
 
             // Load saved social links
@@ -732,6 +876,11 @@
                 document.getElementById('sdbWhatsappBtn').href = s.whatsapp;
                 document.getElementById('hdrTelegramBtn').href = s.telegram;
                 document.getElementById('sdbTelegramBtn').href = s.telegram;
+                document.getElementById('cfgWhatsappUrl').value = s.whatsapp;
+                document.getElementById('cfgTelegramUrl').value = s.telegram;
+            } else {
+                document.getElementById('cfgWhatsappUrl').value = "https://chat.whatsapp.com/example-group-invite";
+                document.getElementById('cfgTelegramUrl').value = "https://t.me/hamsikainfinity";
             }
         });
     </script>
