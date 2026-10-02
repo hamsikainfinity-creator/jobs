@@ -88,7 +88,7 @@
                 <select id="categoryFilter" onchange="renderPosts()" class="border border-slate-300 rounded text-xs px-3 py-2 font-medium focus:ring-2 focus:ring-blue-500 outline-none bg-white">
                     <option value="ALL">All Categories</option>
                     <option value="Central Govt Jobs">🏛️ Central Govt Jobs</option>
-                    <option value="State Govt Jobs">🏛️ State Govt Jobs</option>
+                    <option value="State Govt Jobs">🏛️️ State Govt Jobs</option>
                     <option value="Banking Jobs">🏦 Banking Jobs</option>
                     <option value="Railway Jobs">🚆 Railway Jobs</option>
                     <option value="Defense & UPSC Jobs">🛡️ Defense & UPSC Jobs</option>
@@ -322,7 +322,7 @@
                             <option value="Railway Jobs">🚆 Railway Jobs</option>
                             <option value="Defense & UPSC Jobs">🛡️ Defense & UPSC Jobs</option>
                             <option value="Teaching Jobs">🎓 Teaching Jobs</option>
-                            <option value="Engineering Jobs">⚙️️ Engineering Jobs</option>
+                            <option value="Engineering Jobs">⚙ Engineering Jobs</option>
                             <option value="IT & Private Jobs">💻 IT & Private Jobs</option>
                         </select>
                     </div>
@@ -381,13 +381,6 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // SHA-256 Hashing helper
-        async function sha256(str) {
-            const buffer = new TextEncoder().encode(str);
-            const digest = await crypto.subtle.digest('SHA-256', buffer);
-            return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
         // INITIAL STATE & SEED DATA
         let activeTab = 'all';
         let isAdminLoggedIn = false;
@@ -539,7 +532,7 @@
             document.getElementById('detailViewModal').classList.add('hidden');
         }
 
-        // CONFIDENTIAL AUTHENTICATION LOGIC
+        // DIRECT MATCHING AUTHENTICATION LOGIC
         function openAdminModal() {
             if (isAdminLoggedIn) {
                 openAdminConsole();
@@ -554,14 +547,12 @@
             document.getElementById('adminModal').classList.add('hidden');
         }
 
-        async function handleAdminLogin(e) {
+        function handleAdminLogin(e) {
             e.preventDefault();
             const u = document.getElementById('adminUser').value.trim();
             const p = document.getElementById('adminPass').value.trim();
-            const pHash = await sha256(p);
 
-            // Verified against hash: 2c42d3cbb42137ea360156828bafe0b66b3f71c48011c1dcf1f4df4c3e85e252
-            if (u.toLowerCase() === 'admin' && pHash === '2c42d3cbb42137ea360156828bafe0b66b3f71c48011c1dcf1f4df4c3e85e252') {
+            if (u === 'Admin' && p === 'Basam@2212') {
                 isAdminLoggedIn = true;
                 closeAdminModal();
                 openAdminConsole();
